@@ -32,7 +32,8 @@ Before diving into code, orient yourself with:
 - **Frontend**: Astro 5.x SSR, SolidJS 1.9, Tailwind CSS 3.x
 - **Testing**: Vitest
 - **Formatting/Linting**: Biome
-- **Monorepo**: npm workspaces in root `package.json`
+- **Monorepo**: pnpm workspaces in root `package.json`
+- **Package manager**: pnpm 11.x (pinned in `package.json`)
 
 ## 4. Folder Structure
 

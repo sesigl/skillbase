@@ -1,0 +1,6 @@
+saveExact: true
+engineStrict: true
+
+# Supply-chain security (pnpm v11 defaults — explicit for visibility)
+# minimumReleaseAge: 1440     # 1 day delay before installing new versions (v11 default)
+# blockExoticSubdeps: true    # blocks transitive deps from git/tarball (v11 default)

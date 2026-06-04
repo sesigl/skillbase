@@ -2,6 +2,9 @@
   "private": true,
   "name": "skillbase",
   "packageManager": "pnpm@11.5.1",
+  "engines": {
+    "node": ">=25.9.0"
+  },
   "scripts": {
     "prepare": "husky"
   },

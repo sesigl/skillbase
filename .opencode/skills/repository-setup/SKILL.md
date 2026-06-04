@@ -12,14 +12,24 @@ metadata:
 
 ## Prerequisites
 
-- **Node.js** >= 20.x
-- **pnpm** >= 9.x (Corepack enabled: `corepack enable pnpm`)
+- **[nodenv](https://github.com/nodenv/nodenv)** (recommended) or any Node.js version manager.
+- **Node.js**: exact version defined in `.node-version`. Install via:
+  ```bash
+  nodenv install
+  ```
+- **pnpm**: version pinned in `package.json` under `packageManager`. Node 25+
+  no longer ships Corepack; install pnpm globally instead:
+  ```bash
+  npm install -g pnpm@11.5.1
+  ```
 
 ## Quick Start
 
 ```bash
-git clone <repo-url> skillbase
+git clone git@github.com:sesigl/skillbase.git
 cd skillbase
+nodenv install                        # installs the Node version from .node-version
+npm install -g pnpm@11.5.1           # install pinned pnpm version globally
 pnpm install
 ```
 
@@ -33,19 +43,31 @@ the following Git hooks:
 Pre-commit hooks (formatting, linting) and CI checks are added as tooling is
 introduced in later increments.
 
-## Verifying the Setup
+## Verifying Commitlint
 
 ```bash
-echo "bad commit message" | npx commitlint --verbose
+echo "bad commit message" | npx commitlint --verbose    # should fail
+echo "feat: add skill search endpoint" | npx commitlint --verbose  # should pass
 ```
 
-Should exit with a non-zero code and print the violation.
+## Supply-Chain Security
+
+pnpm v11 includes built-in protections configured in `pnpm-workspace.yaml`:
+
+| Setting                    | Value   | Effect                                          |
+|----------------------------|---------|-------------------------------------------------|
+| `saveExact`                | `true`  | Saves exact versions — no `^` or `~` ranges      |
+| `engineStrict`             | `true`  | Fails install if a dependency is incompatible     |
+| `minimumReleaseAge`        | `1440`  | 1-day delay before new versions (v11 default)     |
+| `blockExoticSubdeps`       | `true`  | Blocks transitive deps from git/tarball (v11 default) |
+| Postinstall scripts        | blocked | Only allowed for explicitly trusted packages      |
+
+Verify settings are active:
 
 ```bash
-echo "feat: add skill search endpoint" | npx commitlint --verbose
+pnpm config get save-exact       # true
+pnpm config get engine-strict    # true
 ```
-
-Should pass.
 
 ## Troubleshooting
 
