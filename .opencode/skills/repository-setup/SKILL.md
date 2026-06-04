@@ -13,17 +13,17 @@ metadata:
 ## Prerequisites
 
 - **Node.js** >= 20.x
-- **npm** >= 10.x
+- **pnpm** >= 9.x (Corepack enabled: `corepack enable pnpm`)
 
 ## Quick Start
 
 ```bash
 git clone <repo-url> skillbase
 cd skillbase
-npm install
+pnpm install
 ```
 
-The `prepare` script runs `husky` automatically on `npm install`, setting up
+The `prepare` script runs `husky` automatically on `pnpm install`, setting up
 the following Git hooks:
 
 | Hook           | Purpose                                                       |
@@ -49,7 +49,7 @@ Should pass.
 
 ## Troubleshooting
 
-- **Husky hooks not running**: Run `npm run prepare` manually, then check
+- **Husky hooks not running**: Run `pnpm run prepare` manually, then check
   `.husky/commit-msg` is executable (`chmod +x .husky/commit-msg`).
-- **commitlint not found**: Run `npm install` to ensure devDependencies are
+- **commitlint not found**: Run `pnpm install` to ensure devDependencies are
   installed.

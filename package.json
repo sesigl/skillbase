@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "skillbase",
+  "packageManager": "pnpm@11.5.1",
   "scripts": {
     "prepare": "husky"
   },

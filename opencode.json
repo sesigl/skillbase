@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "bash": {
+      "npm install *": "ask",
+      "npm i *": "ask",
+      "npm add *": "ask",
+      "pnpm add *": "ask",
+      "pnpm install *": "ask",
+      "pnpm i *": "ask",
+      "yarn add *": "ask",
+      "bun add *": "ask",
+      "bun install *": "ask",
+      "npm uninstall *": "allow",
+      "npm remove *": "allow",
+      "pnpm remove *": "allow",
+      "pnpm uninstall *": "allow",
+      "*": "allow"
+    }
+  }
+}
