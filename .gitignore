@@ -1,0 +1,105 @@
+# === Node / npm ===
+node_modules/
+package-lock.json
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# === Build output ===
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# === Environment ===
+.env
+.env.*
+!.env.example
+
+# === OS generated files ===
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# === IDE / Editor ===
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+*.vsix
+
+# JetBrains (IntelliJ, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Cursor
+.cursor/
+
+# Windsurf
+.windsurf/
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+.netrwhist
+.vim/
+.nvim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# Xcode
+*.xcuserdata
+*.xccheckout
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+# === Testing / Coverage ===
+coverage/
+.nyc_output/
+*.lcov
+
+# === Temp / Misc ===
+*.tmp
+*.temp
+.cache/
+*.pid
+*.seed
+*.pid.lock
