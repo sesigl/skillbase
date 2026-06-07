@@ -9,11 +9,11 @@ The application that pulls AI coding skills from a team's GitHub plugin repo, di
 _Avoid_: Registry, marketplace, platform, catalog, directory, canonical registry
 
 **Skill**:
-A self-contained AI coding capability — a directory with a `SKILL.md` manifest and optional supporting files (scripts, templates, references) inside a Claude Code or OpenCode plugin repository. Uniquely identified by name + author.
+A self-contained AI coding capability — a directory with a `SKILL.md` manifest and optional supporting files (scripts, templates, references) inside a `.claude/skills/` directory, following the Claude Code skills specification. Identified by name (directory name) + source repository path.
 _Avoid_: Plugin, extension, agent, module
 
 **Skill Source**:
-The GitHub repository that Skillbase reads skills from. Configured once; Skillbase stays in sync with the repo's git history. Skills are parsed from their `SKILL.md` manifests — no separate publishing step.
+A local git repository containing `.claude/skills/` directories. Users register (index) repositories by their filesystem path. Skillbase scans the repository for SKILL.md manifests and makes skills available for browsing and search.
 _Avoid_: Registry, catalog, database, store, marketplace
 
 **Governance**:
@@ -33,11 +33,15 @@ An AI coding assistant platform that loads and executes skills (e.g., OpenCode, 
 _Avoid_: Platform, runtime, environment, IDE, agent
 
 **SKILL.md**:
-The required manifest file at the root of every skill directory. Contains frontmatter metadata (name, description, version, author, tags) and the skill's instructions in markdown body. Parsed by Skillbase to build the skill inventory.
+The required manifest file at the root of every skill directory. Contains YAML frontmatter metadata (description, when_to_use, allowed-tools, paths, shell, etc.) and the skill's instructions in markdown body. Follows the Claude Code skills specification.
 _Avoid_: Manifest, config, README, spec
 
+:**Index**:
+The action of registering a local git repository path in Skillbase. The system scans the repository for `.claude/skills/` directories, parses every `SKILL.md`, validates them against the Claude Code and Agent Skills specifications, and makes the discovered skills available for listing and search.
+_Avoid_: Add, register, import, sync
+
 **Skillbase Core**:
-The main application (`apps/core/`) — a skill browser with search, governance dashboards, and usage analytics. Self-hosted, reads from a configured GitHub repo, backed by PostgreSQL.
+The main application (`apps/core/`) — a skill browser with search, governance dashboards, and usage analytics. Self-hosted, reads skills from indexed local git repositories, persists configuration (indexed paths) in PostgreSQL.
 _Avoid_: App, frontend, UI, registry
 
 **Landing Page**:

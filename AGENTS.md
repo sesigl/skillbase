@@ -140,3 +140,9 @@ rules, the Testcontainers pattern, and deterministic checks enforced by ast-grep
 The golden rule: use case tests talk to the system ONLY through use case
 methods. If a use case method you need for test setup is missing, add it
 as a real implementation — don't bypass through repositories or direct DB.
+
+<!-- SPECKIT START -->
+## Active Feature Plan
+
+See `specs/002-git-native-skill-registry/plan.md` for the current implementation plan.
+<!-- SPECKIT END -->

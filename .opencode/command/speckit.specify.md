@@ -10,6 +10,8 @@ handoffs:
     send: true
 ---
 
+<load-skill name="ddd-hexagonal-architect" />
+
 ## User Input
 
 ```text

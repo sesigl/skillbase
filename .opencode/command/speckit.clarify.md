@@ -6,6 +6,8 @@ handoffs:
     prompt: Create a plan for the spec. I am building with...
 ---
 
+<load-skill name="ddd-hexagonal-architect" />
+
 ## User Input
 
 ```text
@@ -114,3 +116,50 @@ Coverage summary table with Clear/Deferred per category. Recommend next command:
 - ALWAYS challenge fuzzy or conflicting language against the glossary.
 - ALWAYS cross-reference stated intentions with actual code.
 - Respect early termination: "stop", "done", "proceed".
+
+### Step 5: ADR Sweep
+
+After the interview loop ends and BEFORE producing the final report, review EVERY clarification answer from this session against the three ADR criteria:
+
+1. **Hard to reverse** — changing your mind later carries meaningful cost.
+2. **Surprising without context** — a future reader would wonder "why did they do it this way?"
+3. **Real trade-off** — there were genuine alternatives and you picked one for specific reasons.
+
+**How to run the sweep:**
+
+Walk through each Q&A in the clarifications section. For each one, ask yourself: does this decision meet all three criteria? If YES, flag it as an ADR candidate.
+
+Present flagged candidates to the user:
+
+```
+## ADR Candidates
+
+The following clarifications merit an ADR:
+
+| Decision | Criteria Met | Why |
+|----------|-------------|-----|
+| [Summary of decision] | Hard to reverse + surprising + trade-off | [1 sentence] |
+
+Create these ADRs?
+```
+
+Do NOT present decisions that fail any of the three criteria. Do NOT create ADRs for implementation details, scope boundaries, or minor preferences.
+
+If the user says yes, create each ADR in `docs/adr/` with sequential numbering (`[next-number]-slug.md`). Format:
+
+```markdown
+# [Title]
+
+**Context:** [1-2 sentences on the situation before the decision.]
+
+**Decision:** [What we decided — 1 sentence.]
+
+**Why:** [Why this over alternatives — 1-2 sentences.]
+
+**Alternatives considered:**
+- **[Alternative]:** [Why rejected — 1 sentence.]
+```
+
+If no decisions meet all three criteria, report: "No ADR-worthy decisions in this session."
+
+Then proceed to the Final Report.

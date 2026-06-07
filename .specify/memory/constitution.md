@@ -161,7 +161,7 @@ evidence-backed practice.
 Every change MUST pass automated, deterministic checks before it is
 considered done.
 
-- A single `npm run verify` command (or equivalent) at the repo root
+- A single `pnpm run verify` command (or equivalent) at the repo root
   runs all checks: formatting, linting, type-checking, and tests.
 - Zero tolerance for errors and warnings. The gate is binary: pass or
   fail.
@@ -176,6 +176,38 @@ considered done.
 
 **Rationale**: Deterministic gates eliminate "it works on my machine"
 and keep the codebase consistently clean.
+
+### VIII. Domain-Driven Design with Hexagonal Architecture
+
+All bounded contexts MUST follow strict DDD tactical patterns with a
+4-layer hexagonal architecture.
+
+- **Rich Domain Model**: Business logic lives in the domain layer.
+  Classes/objects contain behavior methods — never anemic getters/setters
+  only. Aggregate roots enforce invariants at boundaries.
+- **Clean Aggregate Separation**: Each aggregate root is a separate
+  consistency boundary with its own repository interface. Two concepts with
+  different lifecycles, invariants, and storage strategies MUST be separate
+  aggregates — even within the same bounded context. Do NOT cram unrelated
+  operations into one repository interface.
+- **Layer Discipline**: `domain/` defines repository interfaces (zero
+  framework deps) → `infrastructure/` implements them with real tech →
+  `application/` orchestrates use cases (no domain logic) →
+  `interfaces/` adapts to the outside world (no business logic).
+- **Storage Isolation**: Each bounded context owns its storage
+  exclusively. No cross-BC foreign keys, shared tables, or direct
+  database queries across boundaries.
+- **BC Communication**: Use direct calls when the caller needs a
+  response now with strong consistency. Use events when eventual
+  consistency is acceptable and the publisher doesn't need a response.
+  Integration events use a published language — never domain objects.
+- **Dependency Direction**: Always points inward. Infrastructure depends
+  on domain; domain never depends on infrastructure.
+
+**Rationale**: DDD keeps the codebase aligned with the business domain.
+Clean aggregate boundaries prevent god-objects and leaky abstractions
+from accumulating as features grow. The `.opencode/skills/ddd-hexagonal-architect/SKILL.md`
+skill provides detailed instruction for applying these patterns.
 
 ## Project Structure
 
@@ -245,4 +277,4 @@ Both documents MUST be kept in sync. If a conflict arises, this
 constitution prevails for architectural decisions; `AGENTS.md` prevails
 for operational details.
 
-**Version**: 2.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-06
+**Version**: 2.1.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-07
