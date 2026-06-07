@@ -2,7 +2,66 @@ import { mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { findSkillDirectories } from '../../../src/lib/shared/git-utils';
+import { findSkillDirectories, detectRepositoryType } from '../../../src/lib/shared/git-utils';
+
+describe('detectRepositoryType', () => {
+  const tempDirs: string[] = [];
+
+  afterAll(() => {
+    for (const dir of tempDirs) {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  function makeTempDir(): string {
+    const dir = mkdtempSync(join(tmpdir(), 'skillbase-git-utils-'));
+    tempDirs.push(dir);
+    return dir;
+  }
+
+  it('returns standalone for .claude/skills/ at root', () => {
+    const root = makeTempDir();
+    mkdirSync(join(root, '.claude', 'skills'), { recursive: true });
+
+    expect(detectRepositoryType(root)).toBe('standalone');
+  });
+
+  it('returns plugin for skills/ at root', () => {
+    const root = makeTempDir();
+    mkdirSync(join(root, 'skills'), { recursive: true });
+
+    expect(detectRepositoryType(root)).toBe('plugin');
+  });
+
+  it('returns multi-plugin for plugins/*/skills/', () => {
+    const root = makeTempDir();
+    mkdirSync(join(root, 'plugins', 'my-plugin', 'skills'), { recursive: true });
+
+    expect(detectRepositoryType(root)).toBe('multi-plugin');
+  });
+
+  it('prefers standalone over plugin when both exist', () => {
+    const root = makeTempDir();
+    mkdirSync(join(root, '.claude', 'skills'), { recursive: true });
+    mkdirSync(join(root, 'skills'), { recursive: true });
+
+    expect(detectRepositoryType(root)).toBe('standalone');
+  });
+
+  it('prefers standalone over multi-plugin when both exist', () => {
+    const root = makeTempDir();
+    mkdirSync(join(root, '.claude', 'skills'), { recursive: true });
+    mkdirSync(join(root, 'plugins', 'a', 'skills'), { recursive: true });
+
+    expect(detectRepositoryType(root)).toBe('standalone');
+  });
+
+  it('returns undefined when no skill directories exist', () => {
+    const root = makeTempDir();
+
+    expect(detectRepositoryType(root)).toBeUndefined();
+  });
+});
 
 describe('findSkillDirectories', () => {
   const tempDirs: string[] = [];

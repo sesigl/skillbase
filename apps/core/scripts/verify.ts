@@ -21,6 +21,7 @@ const TASK_SETS: Record<string, string[]> = {
     'check:env-imports',
     'check:migrations',
     'check:use-case-tests',
+    'check:no-inline-imports',
   ],
   qa: ['test'],
   verify: [
@@ -35,6 +36,7 @@ const TASK_SETS: Record<string, string[]> = {
     'check:env-imports',
     'check:migrations',
     'check:use-case-tests',
+    'check:no-inline-imports',
     'test',
   ],
 };

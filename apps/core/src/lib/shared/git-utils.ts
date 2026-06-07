@@ -1,5 +1,6 @@
 import { type Dirent, readdirSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import type { RepositoryType } from '../catalog/domain/repository-registry/IndexedRepository';
 
 export function findGitRoot(startPath: string): string | null {
   let current = resolve(startPath);
@@ -26,6 +27,22 @@ export function pathExists(absPath: string): boolean {
   } catch {
     return false;
   }
+}
+
+export function detectRepositoryType(repoRoot: string): RepositoryType | undefined {
+  if (isDirectory(join(repoRoot, '.claude', 'skills'))) {
+    return 'standalone';
+  }
+
+  if (isDirectory(join(repoRoot, 'skills'))) {
+    return 'plugin';
+  }
+
+  if (hasPluginSkills(repoRoot)) {
+    return 'multi-plugin';
+  }
+
+  return undefined;
 }
 
 export function findSkillDirectories(repoRoot: string): string[] {
@@ -59,6 +76,26 @@ export function findSkillDirectories(repoRoot: string): string[] {
   }
 
   return dirs;
+}
+
+function hasPluginSkills(repoRoot: string): boolean {
+  const pluginsDir = join(repoRoot, 'plugins');
+  if (!isDirectory(pluginsDir)) return false;
+
+  let entries: Dirent[];
+  try {
+    entries = readdirSync(pluginsDir, { withFileTypes: true });
+  } catch {
+    return false;
+  }
+
+  for (const entry of entries) {
+    if (entry.isDirectory() && isDirectory(join(pluginsDir, entry.name, 'skills'))) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function isDirectory(absPath: string): boolean {

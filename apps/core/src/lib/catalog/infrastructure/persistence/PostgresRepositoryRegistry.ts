@@ -1,14 +1,15 @@
 import type { DatabaseConnection } from '../../../shared/infrastructure/persistence/DatabaseConnection';
+import type { RepositoryType } from '../../domain/repository-registry/IndexedRepository';
 import type { RepositoryRegistry } from '../../domain/repository-registry/RepositoryRegistry';
 
 export class PostgresRepositoryRegistry implements RepositoryRegistry {
   constructor(private readonly db: DatabaseConnection) {}
 
-  async register(path: string): Promise<void> {
+  async register(path: string, type: RepositoryType): Promise<void> {
     await this.db.execute(async (client) => {
       await client.query(
-        'INSERT INTO indexed_repositories (path, indexed_at, last_status) VALUES ($1, NOW(), $2) ON CONFLICT (path) DO UPDATE SET indexed_at = NOW(), last_status = $2',
-        [path, 'valid']
+        'INSERT INTO indexed_repositories (path, indexed_at, last_status, repo_type) VALUES ($1, NOW(), $2, $3) ON CONFLICT (path) DO UPDATE SET indexed_at = NOW(), last_status = $2, repo_type = $3',
+        [path, 'valid', type]
       );
     });
   }
@@ -25,25 +26,28 @@ export class PostgresRepositoryRegistry implements RepositoryRegistry {
     });
   }
 
-  async listAll(): Promise<{ path: string; indexedAt: Date; lastStatus: string }[]> {
+  async listAll(): Promise<
+    { path: string; indexedAt: Date; lastStatus: string; type: RepositoryType }[]
+  > {
     return this.db.execute(async (client) => {
       const result = await client.query(
-        'SELECT path, indexed_at, last_status FROM indexed_repositories ORDER BY path'
+        'SELECT path, indexed_at, last_status, repo_type FROM indexed_repositories ORDER BY path'
       );
       return result.rows.map((row: Record<string, unknown>) => ({
         path: row.path as string,
         indexedAt: row.indexed_at as Date,
         lastStatus: row.last_status as string,
+        type: row.repo_type as RepositoryType,
       }));
     });
   }
 
   async findByPath(
     path: string
-  ): Promise<{ path: string; indexedAt: Date; lastStatus: string } | null> {
+  ): Promise<{ path: string; indexedAt: Date; lastStatus: string; type: RepositoryType } | null> {
     return this.db.execute(async (client) => {
       const result = await client.query(
-        'SELECT path, indexed_at, last_status FROM indexed_repositories WHERE path = $1',
+        'SELECT path, indexed_at, last_status, repo_type FROM indexed_repositories WHERE path = $1',
         [path]
       );
       if (result.rows.length === 0) return null;
@@ -52,6 +56,7 @@ export class PostgresRepositoryRegistry implements RepositoryRegistry {
         path: row.path as string,
         indexedAt: row.indexed_at as Date,
         lastStatus: row.last_status as string,
+        type: row.repo_type as RepositoryType,
       };
     });
   }

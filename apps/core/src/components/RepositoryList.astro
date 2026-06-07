@@ -56,6 +56,10 @@ function formatDate(date: Date): string {
               {repo.lastStatus}
             </span>
 
+            <span class="tag shrink-0 rounded-md border-[var(--border)] text-[var(--fg-muted)]">
+              {repo.type}
+            </span>
+
             <form method="post" class="shrink-0">
               <input type="hidden" name="_action" value="remove" />
               <input type="hidden" name="path" value={repo.path} />

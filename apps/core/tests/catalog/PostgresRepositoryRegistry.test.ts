@@ -3,6 +3,8 @@ import { PostgresRepositoryRegistry } from '../../src/lib/catalog/infrastructure
 import { PostgresDatabaseConnection } from '../../src/lib/shared/infrastructure/persistence/PostgresDatabaseConnection';
 import { cleanDatabase, getTestPool } from '../helpers/testDatabase';
 
+const TYPE = 'standalone' as const;
+
 describe('PostgresRepositoryRegistry', () => {
   let registry: PostgresRepositoryRegistry;
 
@@ -14,7 +16,7 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('registers a new repository path', async () => {
-    await registry.register('/Users/test/skills-repo');
+    await registry.register('/Users/test/skills-repo', TYPE);
 
     const repos = await registry.listAll();
     expect(repos.length).toBe(1);
@@ -23,11 +25,11 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('re-registering the same path updates indexed_at (idempotent)', async () => {
-    await registry.register('/Users/test/skills-repo');
+    await registry.register('/Users/test/skills-repo', TYPE);
     const first = await registry.findByPath('/Users/test/skills-repo');
 
     await new Promise((r) => setTimeout(r, 10));
-    await registry.register('/Users/test/skills-repo');
+    await registry.register('/Users/test/skills-repo', TYPE);
     const second = await registry.findByPath('/Users/test/skills-repo');
 
     expect(first).not.toBeNull();
@@ -39,8 +41,8 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('removes a repository by path', async () => {
-    await registry.register('/Users/test/repo-a');
-    await registry.register('/Users/test/repo-b');
+    await registry.register('/Users/test/repo-a', TYPE);
+    await registry.register('/Users/test/repo-b', TYPE);
 
     await registry.remove('/Users/test/repo-a');
 
@@ -50,7 +52,7 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('removing a non-existent path is a no-op', async () => {
-    await registry.register('/Users/test/repo-a');
+    await registry.register('/Users/test/repo-a', TYPE);
     await registry.remove('/Users/test/non-existent');
 
     const repos = await registry.listAll();
@@ -58,9 +60,9 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('clears all repositories', async () => {
-    await registry.register('/Users/test/repo-a');
-    await registry.register('/Users/test/repo-b');
-    await registry.register('/Users/test/repo-c');
+    await registry.register('/Users/test/repo-a', TYPE);
+    await registry.register('/Users/test/repo-b', TYPE);
+    await registry.register('/Users/test/repo-c', TYPE);
 
     await registry.clearAll();
 
@@ -80,7 +82,7 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('findByPath returns the indexed repository', async () => {
-    await registry.register('/Users/test/skills-repo');
+    await registry.register('/Users/test/skills-repo', TYPE);
 
     const result = await registry.findByPath('/Users/test/skills-repo');
     expect(result).not.toBeNull();
@@ -89,8 +91,8 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('listAll returns repositories ordered by path', async () => {
-    await registry.register('/Users/test/z-repo');
-    await registry.register('/Users/test/a-repo');
+    await registry.register('/Users/test/z-repo', TYPE);
+    await registry.register('/Users/test/a-repo', TYPE);
 
     const repos = await registry.listAll();
     expect(repos[0].path).toBe('/Users/test/a-repo');
@@ -98,7 +100,7 @@ describe('PostgresRepositoryRegistry', () => {
   });
 
   it('updateStatus changes lastStatus', async () => {
-    await registry.register('/Users/test/skills-repo');
+    await registry.register('/Users/test/skills-repo', TYPE);
 
     await registry.updateStatus('/Users/test/skills-repo', 'missing');
 

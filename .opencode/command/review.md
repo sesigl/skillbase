@@ -10,7 +10,7 @@ $ARGUMENTS
 
 ## Context
 
-Load the `Clean Code Reviewer (Uncle Bob & Kent Beck)` and `frontend-design` skills for review context.
+Load the `Clean Code Reviewer (Uncle Bob & Kent Beck)`, `frontend-design`, and `engineering-best-practices` skills for review context.
 
 Before proceeding, get all changes in the current branch:
 
@@ -36,6 +36,7 @@ Read the diff. Each section below applies only if its trigger matches the change
   - **Simplicity.** Would a senior engineer say this is overcomplicated? If yes, simplify. No abstractions for single-use code. No speculative flexibility.
   - **Surgical changes.** Every changed line must trace to the user's request. Flag any unintended adjacent edits.
   - **Naming.** Prefer domain-meaningful names (e.g., `SkillRepository`, not `ISkillRepository`). No `I` prefix on interfaces. No underscore prefixes.
+  - **Null-safety.** Per `engineering-best-practices` skill: can we eliminate null/undefined by design? Use empty lists over null, Null Object over null, or simply don't allow null. Prefer database `NOT NULL` constraints over nullable columns. Every `| null` or `?` in a type must carry distinct domain meaning — not just "might not be there."
 
 ### If domain layer files change (`src/lib/*/domain/`)
 

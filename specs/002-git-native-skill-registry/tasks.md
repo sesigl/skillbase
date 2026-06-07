@@ -217,6 +217,36 @@ Use case tests call the system ONLY through use case methods. They never touch r
 
 ---
 
+## Phase 7: Repository Type Classification (Post-Implementation)
+
+**Purpose**: Add a domain-level `RepositoryType` discriminant to `IndexedRepository` that classifies repos by their skill directory layout. Drives type-specific discovery strategies.
+
+### Task Group G11: Domain & Detection
+
+- [x] T044 Add `RepositoryType` to `IndexedRepository` aggregate (`domain/repository-registry/IndexedRepository.ts`) — three variants: `'standalone'` (`.claude/skills/`), `'plugin'` (root `skills/`), `'multi-plugin'` (`plugins/*/skills/`). Type is always non-nullable.
+
+- [x] T045 [P] Implement `detectRepositoryType()` in `shared/git-utils.ts` — returns `RepositoryType | undefined` with precedence: standalone > plugin > multi-plugin. Undefined only when no skill directories exist.
+
+- [x] T046 [P] Write unit tests for `detectRepositoryType` in `tests/lib/shared/git-utils.test.ts` — covers all three types, precedence rules, and undefined case.
+
+- [x] T047 Add `repo_type` column migration (`migrations/sqls/20260607000001-add-repo-type-up.sql`) and migration script.
+
+### Task Group G12: Wire Through Use Cases & Registry
+
+- [x] T048 Update `RepositoryRegistry` interface — `register(path, type)` accepts non-nullable `RepositoryType`, `listAll()` and `findByPath()` return type.
+
+- [x] T049 Update `PostgresRepositoryRegistry` — INSERT/UPDATE/SELECT include `repo_type` column.
+
+- [x] T050 Update `FilesystemSkillRepository.scanRepository()` — detect type via `detectRepositoryType()` and return in `RepositoryScanResult.repositoryType`.
+
+- [x] T051 Update `CatalogUseCases.indexRepository()` — pass `scanResult.repositoryType` to `registry.register()`. `listRepositories()` includes `type` in returned `IndexedRepository`.
+
+- [x] T052 Update `RepositoryList.astro` component — display type badge next to status badge for each repository row.
+
+- [x] T053 Run `pnpm run verify` — all format, lint, typecheck, and 86 tests pass.
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies

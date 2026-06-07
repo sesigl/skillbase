@@ -3,10 +3,11 @@ import { join } from 'node:path';
 import { type Skill, SkillSchema } from '../../domain/skill/Skill';
 import type { SkillRepository } from '../../domain/skill/SkillRepository';
 import type {
+  RepositoryType,
   RepositoryScanResult,
   ValidationError,
 } from '../../domain/repository-registry/IndexedRepository';
-import { findGitRoot, findSkillDirectories } from '../../../shared/git-utils';
+import { findGitRoot, findSkillDirectories, detectRepositoryType } from '../../../shared/git-utils';
 import { parseFrontmatter } from './frontmatter';
 
 const TAG_TAXONOMY = [
@@ -73,8 +74,11 @@ export class FilesystemSkillRepository implements SkillRepository {
         skills: [],
         validationErrors: [{ file: repoPath, message: 'Not a git repository' }],
         warnings: [],
+        repositoryType: 'standalone',
       };
     }
+
+    const repoType = detectRepositoryType(gitRoot);
 
     const skillDirs = findSkillDirectories(gitRoot);
     if (skillDirs.length === 0) {
@@ -89,13 +93,18 @@ export class FilesystemSkillRepository implements SkillRepository {
           },
         ],
         warnings: [],
+        repositoryType: repoType ?? 'standalone',
       };
     }
 
-    return this.scanSkillDirectories(gitRoot, skillDirs);
+    return this.scanSkillDirectories(gitRoot, skillDirs, repoType ?? 'standalone');
   }
 
-  private scanSkillDirectories(gitRoot: string, skillDirs: string[]): RepositoryScanResult {
+  private scanSkillDirectories(
+    gitRoot: string,
+    skillDirs: string[],
+    repositoryType: RepositoryType
+  ): RepositoryScanResult {
     const allSkills: Skill[] = [];
     const allErrors: ValidationError[] = [];
     const allWarnings: string[] = [];
@@ -115,6 +124,7 @@ export class FilesystemSkillRepository implements SkillRepository {
       skills: allSkills,
       validationErrors: allErrors,
       warnings: allWarnings,
+      repositoryType,
     };
   }
 

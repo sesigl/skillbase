@@ -40,13 +40,14 @@ export class CatalogUseCases {
         skills: [],
         validationErrors: [{ file: absPath, message: `Path does not exist: ${absPath}` }],
         warnings: [],
+        repositoryType: 'standalone',
       };
     }
 
     const scanResult = this.skillRepository.scanRepository(absPath);
 
     if (scanResult.status === 'valid') {
-      await this.repositoryRegistry.register(scanResult.repository);
+      await this.repositoryRegistry.register(scanResult.repository, scanResult.repositoryType);
     }
 
     return scanResult;
@@ -59,6 +60,7 @@ export class CatalogUseCases {
       path: r.path,
       indexedAt: r.indexedAt,
       lastStatus: pathExists(r.path) ? 'valid' : 'missing',
+      type: r.type,
     }));
   }
 

@@ -24,6 +24,7 @@
     "check:migrations": "tsx scripts/checks/migrations.ts",
     "check:env-imports": "tsx scripts/checks/env-imports.ts",
     "check:use-case-tests": "tsx scripts/checks/use-case-tests.ts",
+    "check:no-inline-imports": "tsx scripts/checks/no-inline-imports.ts",
     "verify": "tsx scripts/verify.ts",
     "review": "TASK_SET=review tsx scripts/verify.ts",
     "qa": "TASK_SET=qa tsx scripts/verify.ts"
