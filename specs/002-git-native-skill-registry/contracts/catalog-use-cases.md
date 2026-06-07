@@ -92,3 +92,55 @@ Returns all indexed repositories with their current status (determined by checki
 - `invalid`: Path exists but fails git repo or skills check
 
 **Errors**: None.
+
+---
+
+## API Surface
+
+All mutation operations are exposed as Astro server-side API routes under the core app. The GET page handles browsing and search via query parameters. All routes return JSON. The page calls these routes via form submissions (native HTML `<form method="post">`) — no client-side JavaScript required.
+
+### GET / (browse and search)
+
+Already implemented. Accepts optional `?search=` query parameter. Renders the full page with SearchBar, repository list, skill grid, and EmptyState as appropriate. Calls `browseSkills()` or `searchSkills(query)` and `listRepositories()` server-side.
+
+### POST /api/repositories/index
+
+```
+Content-Type: application/x-www-form-urlencoded
+Body: path=<absolute filesystem path>
+
+Response 200:
+{
+  "status": "valid" | "invalid",
+  "repository": "<absolute path>",
+  "skills": [Skill, ...],
+  "validationErrors": [{ "file": "<path>", "message": "<description>" }, ...],
+  "warnings": ["<message>", ...],
+  "reindexed": true | false,
+  "delta": { "added": N, "updated": N, "removed": N }  // only if reindexed
+}
+```
+
+Calls `indexRepository(path)`. On success (status: "valid"), the browser redirects back to `/` with the result shown via flash message or query parameter. On failure, renders the same page with validation errors.
+
+### POST /api/repositories/remove
+
+```
+Content-Type: application/x-www-form-urlencoded
+Body: path=<absolute filesystem path>
+
+Response: Redirect to / with success flash
+```
+
+Calls `removeRepository(path)`. No-op if path not indexed. Does not touch the filesystem.
+
+### POST /api/repositories/clear-all
+
+```
+Content-Type: application/x-www-form-urlencoded
+Body: (none)
+
+Response: Redirect to / with success flash
+```
+
+Calls `clearAll()`. Removes all indexed repositories.

@@ -13,7 +13,7 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  var filePath = path.join(__dirname, 'sqls', '20260604000000-create-skills-up.sql');
+  var filePath = path.join(__dirname, 'sqls', '20260607000000-create-indexed-repos-up.sql');
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, 'utf8', function (err, data) {
       if (err) return reject(err);
@@ -23,7 +23,7 @@ exports.up = function (db) {
 };
 
 exports.down = function (db) {
-  var filePath = path.join(__dirname, 'sqls', '20260604000000-create-skills-down.sql');
+  var filePath = path.join(__dirname, 'sqls', '20260607000000-create-indexed-repos-down.sql');
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, 'utf8', function (err, data) {
       if (err) return reject(err);

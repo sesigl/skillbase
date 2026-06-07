@@ -30,10 +30,10 @@ Use case tests call the system ONLY through use case methods. They never touch r
 
 **Purpose**: Remove obsolete code, install new dependencies, create migration scaffold.
 
-- [ ] T001 Remove old skill migration files: `apps/core/migrations/sqls/20260604000000-create-skills-up.sql`, `apps/core/migrations/sqls/20260604000000-create-skills-down.sql`, `apps/core/migrations/sqls/20260604000001-seed-skills-up.sql`, `apps/core/migrations/sqls/20260604000001-seed-skills-down.sql`, `apps/core/migrations/20260604000000-create-skills.js`, `apps/core/migrations/20260604000001-seed-skills.js`
-- [ ] T002 Remove `apps/core/src/lib/catalog/infrastructure/persistence/PostgresSkillRepository.ts` and `apps/core/tests/catalog/PostgresSkillRepository.test.ts`
-- [ ] T003 [P] Install `yaml` npm package in `apps/core` (`pnpm --filter @skillbase/core add yaml`)
-- [ ] T004 [P] Create migration for `indexed_repositories` table: `apps/core/migrations/sqls/20260607000000-create-indexed-repos-up.sql` (CREATE TABLE with path TEXT PRIMARY KEY, indexed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), last_status VARCHAR(20) NOT NULL DEFAULT 'valid') and matching down migration, plus `apps/core/migrations/20260607000000-create-indexed-repos.js` migration script
+- [x] T001 Remove old skill migration files: `apps/core/migrations/sqls/20260604000000-create-skills-up.sql`, `apps/core/migrations/sqls/20260604000000-create-skills-down.sql`, `apps/core/migrations/sqls/20260604000001-seed-skills-up.sql`, `apps/core/migrations/sqls/20260604000001-seed-skills-down.sql`, `apps/core/migrations/20260604000000-create-skills.js`, `apps/core/migrations/20260604000001-seed-skills.js`
+- [x] T002 Remove `apps/core/src/lib/catalog/infrastructure/persistence/PostgresSkillRepository.ts` and `apps/core/tests/catalog/PostgresSkillRepository.test.ts`
+- [x] T003 [P] Install `yaml` npm package in `apps/core` (`pnpm --filter @skillbase/core add yaml`)
+- [x] T004 [P] Create migration for `indexed_repositories` table: `apps/core/migrations/sqls/20260607000000-create-indexed-repos-up.sql` (CREATE TABLE with path TEXT PRIMARY KEY, indexed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), last_status VARCHAR(20) NOT NULL DEFAULT 'valid') and matching down migration, plus `apps/core/migrations/20260607000000-create-indexed-repos.js` migration script
 
 ---
 
@@ -43,14 +43,14 @@ Use case tests call the system ONLY through use case methods. They never touch r
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T005 Create Skill aggregate root with Zod frontmatter schema in `apps/core/src/lib/catalog/domain/skill/Skill.ts` — all fields per data-model.md (name, description, license, compatibility, allowedTools, whenToUse, argumentHint, arguments, disableModelInvocation, userInvocable, disallowedTools, model, effort, context, agent, hooks, paths, shell, metadata, tags, providers, content, assets, sourceRepository, sourcePath) with validation rules (name matches parent dir, 1-64 lowercase alphanumeric+hyphens, effort enum, shell enum, context enum)
-- [ ] T006 [P] Update SkillRepository interface in `apps/core/src/lib/catalog/domain/skill/SkillRepository.ts` — keep `findAll()` and `search(query)` signatures, update return types to use new `Skill` type from T005
-- [ ] T007 [P] Create IndexedRepository aggregate and RepositoryScanResult type in `apps/core/src/lib/catalog/domain/repository-registry/IndexedRepository.ts` per data-model.md (path: string, indexedAt: Date, lastStatus: 'valid'|'missing'|'invalid')
-- [ ] T008 [P] Create RepositoryRegistry interface in `apps/core/src/lib/catalog/domain/repository-registry/RepositoryRegistry.ts` with methods: `register(path)`, `remove(path)`, `clearAll()`, `listAll()`, `findByPath(path)`
-- [ ] T009 Implement PostgresRepositoryRegistry in `apps/core/src/lib/catalog/infrastructure/persistence/PostgresRepositoryRegistry.ts` — implements RepositoryRegistry, uses existing PostgreSQL connection, INSERT/UPDATE/DELETE/SELECT on `indexed_repositories` table
-- [ ] T010 [P] Write Skill Zod schema unit tests in `apps/core/tests/lib/shared/skill.test.ts` — test valid frontmatter parsing, required field validation (name, description), optional field handling, enum validation (effort, shell, context), edge cases (empty SKILL.md, missing frontmatter, binary content, large files >1MB warning, name/directory mismatch)
-- [ ] T011 [P] Write PostgresRepositoryRegistry integration test in `apps/core/tests/catalog/PostgresRepositoryRegistry.test.ts` — use Testcontainers PostgreSQL, test register/remove/clearAll/listAll/findByPath, test duplicate path handling (idempotent re-register), test empty state
-- [ ] T012 Update DI wiring in `apps/core/src/lib/catalog/infrastructure/di.ts` — register PostgresRepositoryRegistry singleton, export factory function
+- [x] T005 Create Skill aggregate root with Zod frontmatter schema in `apps/core/src/lib/catalog/domain/skill/Skill.ts` — all fields per data-model.md (name, description, license, compatibility, allowedTools, whenToUse, argumentHint, arguments, disableModelInvocation, userInvocable, disallowedTools, model, effort, context, agent, hooks, paths, shell, metadata, tags, providers, content, assets, sourceRepository, sourcePath) with validation rules (name matches parent dir, 1-64 lowercase alphanumeric+hyphens, effort enum, shell enum, context enum)
+- [x] T006 [P] Update SkillRepository interface in `apps/core/src/lib/catalog/domain/skill/SkillRepository.ts` — keep `findAll()` and `search(query)` signatures, update return types to use new `Skill` type from T005
+- [x] T007 [P] Create IndexedRepository aggregate and RepositoryScanResult type in `apps/core/src/lib/catalog/domain/repository-registry/IndexedRepository.ts` per data-model.md (path: string, indexedAt: Date, lastStatus: 'valid'|'missing'|'invalid')
+- [x] T008 [P] Create RepositoryRegistry interface in `apps/core/src/lib/catalog/domain/repository-registry/RepositoryRegistry.ts` with methods: `register(path)`, `remove(path)`, `clearAll()`, `listAll()`, `findByPath(path)`
+- [x] T009 Implement PostgresRepositoryRegistry in `apps/core/src/lib/catalog/infrastructure/persistence/PostgresRepositoryRegistry.ts` — implements RepositoryRegistry, uses existing PostgreSQL connection, INSERT/UPDATE/DELETE/SELECT on `indexed_repositories` table
+- [x] T010 [P] Write Skill Zod schema unit tests in `apps/core/tests/lib/shared/skill.test.ts` — test valid frontmatter parsing, required field validation (name, description), optional field handling, enum validation (effort, shell, context), edge cases (empty SKILL.md, missing frontmatter, binary content, large files >1MB warning, name/directory mismatch)
+- [x] T011 [P] Write PostgresRepositoryRegistry integration test in `apps/core/tests/catalog/PostgresRepositoryRegistry.test.ts` — use Testcontainers PostgreSQL, test register/remove/clearAll/listAll/findByPath, test duplicate path handling (idempotent re-register), test empty state
+- [x] T012 Update DI wiring in `apps/core/src/lib/catalog/infrastructure/di.ts` — register PostgresRepositoryRegistry singleton, export factory function
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -67,18 +67,18 @@ Use case tests call the system ONLY through use case methods. They never touch r
 **Use case**: `indexRepository(path: string): Promise<RepositoryScanResult>` — validates path, scans for skills, persists repo reference, reports all errors
 
 **Test** (RED — must fail first):
-- [ ] T013 [US1] Write use case test for `indexRepository()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: valid repo with skills, path does not exist, path not a git repo, no .claude/skills/ directory, invalid SKILL.md files with all errors collected, re-indexing same path (idempotent update), mixed valid/invalid skills in same repo
+- [x] T013 [US1] Write use case test for `indexRepository()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: valid repo with skills, path does not exist, path not a git repo, no .claude/skills/ directory, invalid SKILL.md files with all errors collected, re-indexing same path (idempotent update), mixed valid/invalid skills in same repo
 
 **Implementation** (make it green):
-- [ ] T014 [P] [US1] Implement `findGitRoot(path)` helper — walks up from given path checking for `.git` entry (file or directory) using `fs.statSync`, returns git root path or null
-- [ ] T015 [P] [US1] Implement `parseFrontmatter(content)` helper — extracts YAML block between `---` markers, parses with `yaml.parse()`, returns `{ frontmatter: Record<string, unknown>, body: string }`
-- [ ] T016 [US1] Implement FilesystemSkillRepository in `apps/core/src/lib/catalog/infrastructure/filesystem/FilesystemSkillRepository.ts` — implements SkillRepository, discovers `.claude/skills/*/SKILL.md` files synchronously, parses frontmatter with T015 helper, validates with Skill Zod schema from T005, extracts assets from markdown body, derives tags and providers per research.md, collects ALL validation errors per FR-004, handles edge cases: symlinked skill dirs, permission errors (skip with error), non-UTF8 content (skip with error), empty SKILL.md, missing SKILL.md in directory (warn), nested .claude/skills/ (only scan root), large files (warn >1MB)
-- [ ] T017 [US1] Implement `indexRepository(path)` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — validates path sequentially (exists → git repo → has .claude/skills/ → has SKILL.md files), delegates to FilesystemSkillRepository for scanning, persists via PostgresRepositoryRegistry, returns RepositoryScanResult with all errors/warnings/skills, handles re-indexing (update indexed_at, detect delta)
-- [ ] T018 [US1] Write FilesystemSkillRepository integration tests in `apps/core/tests/catalog/FilesystemSkillRepository.test.ts` — use `fs.mkdtempSync` + `git init` for fixture repos, test: valid skills, skills with all Claude Code extension fields, skills with metadata.tags/providers, skills with hooks/context/agent/effort, directory without SKILL.md (ignored + warning), invalid frontmatter (all errors collected), permission error simulation, symlink handling, large file warning, name/directory mismatch validation, tags derivation fallback, providers inference fallback
-- [ ] T019 [US1] Update DI wiring in `apps/core/src/lib/catalog/infrastructure/di.ts` — register FilesystemSkillRepository, wire into CatalogUseCases constructor
+- [x] T014 [P] [US1] Implement `findGitRoot(path)` helper — walks up from given path checking for `.git` entry (file or directory) using `fs.statSync`, returns git root path or null
+- [x] T015 [P] [US1] Implement `parseFrontmatter(content)` helper — extracts YAML block between `---` markers, parses with `yaml.parse()`, returns `{ frontmatter: Record<string, unknown>, body: string }`
+- [x] T016 [US1] Implement FilesystemSkillRepository in `apps/core/src/lib/catalog/infrastructure/filesystem/FilesystemSkillRepository.ts` — implements SkillRepository, discovers `.claude/skills/*/SKILL.md` files synchronously, parses frontmatter with T015 helper, validates with Skill Zod schema from T005, extracts assets from markdown body, derives tags and providers per research.md, collects ALL validation errors per FR-004, handles edge cases: symlinked skill dirs, permission errors (skip with error), non-UTF8 content (skip with error), empty SKILL.md, missing SKILL.md in directory (warn), nested .claude/skills/ (only scan root), large files (warn >1MB)
+- [x] T017 [US1] Implement `indexRepository(path)` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — validates path sequentially (exists → git repo → has .claude/skills/ → has SKILL.md files), delegates to FilesystemSkillRepository for scanning, persists via PostgresRepositoryRegistry, returns RepositoryScanResult with all errors/warnings/skills, handles re-indexing (update indexed_at, detect delta)
+- [x] T018 [US1] Write FilesystemSkillRepository integration tests in `apps/core/tests/catalog/FilesystemSkillRepository.test.ts` — use `fs.mkdtempSync` + `git init` for fixture repos, test: valid skills, skills with all Claude Code extension fields, skills with metadata.tags/providers, skills with hooks/context/agent/effort, directory without SKILL.md (ignored + warning), invalid frontmatter (all errors collected), permission error simulation, symlink handling, large file warning, name/directory mismatch validation, tags derivation fallback, providers inference fallback
+- [x] T019 [US1] Update DI wiring in `apps/core/src/lib/catalog/infrastructure/di.ts` — register FilesystemSkillRepository, wire into CatalogUseCases constructor
 
 **Verify** (GREEN):
-- [ ] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/` and `pnpm --filter @skillbase/core test -- tests/catalog/FilesystemSkillRepository.test.ts`
+- [x] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/` and `pnpm --filter @skillbase/core test -- tests/catalog/FilesystemSkillRepository.test.ts`
 
 **Checkpoint**: User Story 1 is fully functional — users can index repositories with full validation and error reporting.
 
@@ -95,27 +95,27 @@ Use case tests call the system ONLY through use case methods. They never touch r
 **Use case**: `browseSkills(): Promise<Skill[]>` — returns all skills from all indexed repos, skips missing paths with warning
 
 **Test** (RED — must fail first):
-- [ ] T020 [US2] Write use case test for `browseSkills()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: skills from multiple repos combined, empty result when no repos indexed, missing repo paths excluded from results, repo with no skills returns empty for that repo
+- [x] T020 [US2] Write use case test for `browseSkills()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: skills from multiple repos combined, empty result when no repos indexed, missing repo paths excluded from results, repo with no skills returns empty for that repo
 
 **Implementation** (make it green):
-- [ ] T021 [US2] Implement/update `browseSkills()` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — reads all indexed repo paths from PostgresRepositoryRegistry, scans each via FilesystemSkillRepository, combines results, skips missing paths with collected warnings, returns `Skill[]`
+- [x] T021 [US2] Implement/update `browseSkills()` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — reads all indexed repo paths from PostgresRepositoryRegistry, scans each via FilesystemSkillRepository, combines results, skips missing paths with collected warnings, returns `Skill[]`
 
 **Verify** (GREEN):
-- [ ] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (browseSkills subset)
+- [x] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (browseSkills subset)
 
 ### Task Group G3: searchSkills(query)
 
 **Use case**: `searchSkills(query: string): Promise<Skill[]>` — searches by name (case-insensitive substring), description (substring), tags (exact match), providers (exact match)
 
 **Test** (RED — must fail first):
-- [ ] T022 [US2] Write use case test for `searchSkills()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: name substring match (case-insensitive), description substring match, tag exact match, provider exact match, combined multi-field search, empty query returns all, no results, cross-repo search results
+- [x] T022 [US2] Write use case test for `searchSkills()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: name substring match (case-insensitive), description substring match, tag exact match, provider exact match, combined multi-field search, empty query returns all, no results, cross-repo search results
 
 **Implementation** (make it green):
-- [ ] T023 [US2] Implement `searchSkills(query)` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — calls `browseSkills()` then filters by name/description substring, tags exact match, providers exact match, returns `Skill[]`
-- [ ] T024 [US2] Add `search()` method to FilesystemSkillRepository in `apps/core/src/lib/catalog/infrastructure/filesystem/FilesystemSkillRepository.ts` if not already present — filters scanned skills by term matching name, description, tags, providers
+- [x] T023 [US2] Implement `searchSkills(query)` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — calls `browseSkills()` then filters by name/description substring, tags exact match, providers exact match, returns `Skill[]`
+- [x] T024 [US2] Add `search()` method to FilesystemSkillRepository in `apps/core/src/lib/catalog/infrastructure/filesystem/FilesystemSkillRepository.ts` if not already present — filters scanned skills by term matching name, description, tags, providers
 
 **Verify** (GREEN):
-- [ ] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (searchSkills subset)
+- [x] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (searchSkills subset)
 
 **Checkpoint**: User Story 2 is fully functional — users can browse and search across all indexed repositories.
 
@@ -132,55 +132,88 @@ Use case tests call the system ONLY through use case methods. They never touch r
 **Use case**: `listRepositories(): Promise<IndexedRepository[]>` — returns all indexed repos with current status determined at query time
 
 **Test** (RED — must fail first):
-- [ ] T025 [US3] Write use case test for `listRepositories()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: repos with status valid, repos with status missing (path deleted after indexing), repos with status invalid, empty list, skill count per repo
+- [x] T025 [US3] Write use case test for `listRepositories()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: repos with status valid, repos with status missing (path deleted after indexing), repos with status invalid, empty list, skill count per repo
 
 **Implementation** (make it green):
-- [ ] T026 [US3] Implement `listRepositories()` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — reads all repos from PostgresRepositoryRegistry, checks filesystem to determine current status (valid/missing/invalid), counts skills per repo via FilesystemSkillRepository scan, returns `IndexedRepository[]`
+- [x] T026 [US3] Implement `listRepositories()` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — reads all repos from PostgresRepositoryRegistry, checks filesystem to determine current status (valid/missing/invalid), counts skills per repo via FilesystemSkillRepository scan, returns `IndexedRepository[]`
 
 **Verify** (GREEN):
-- [ ] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (listRepositories subset)
+- [x] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (listRepositories subset)
 
 ### Task Group G5: removeRepository(path)
 
 **Use case**: `removeRepository(path: string): Promise<void>` — removes path from index, does not touch filesystem
 
 **Test** (RED — must fail first):
-- [ ] T027 [US3] Write use case test for `removeRepository()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: remove existing repo, remove non-indexed path (no-op), verify skills from removed repo no longer appear in browseSkills, repo on disk is untouched
+- [x] T027 [US3] Write use case test for `removeRepository()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: remove existing repo, remove non-indexed path (no-op), verify skills from removed repo no longer appear in browseSkills, repo on disk is untouched
 
 **Implementation** (make it green):
-- [ ] T028 [US3] Implement `removeRepository(path)` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — delegates to PostgresRepositoryRegistry.remove(), no-op if path not indexed
+- [x] T028 [US3] Implement `removeRepository(path)` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — delegates to PostgresRepositoryRegistry.remove(), no-op if path not indexed
 
 **Verify** (GREEN):
-- [ ] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (removeRepository subset)
+- [x] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (removeRepository subset)
 
 ### Task Group G6: clearAll()
 
 **Use case**: `clearAll(): Promise<void>` — removes all indexed repos, skills list becomes empty
 
 **Test** (RED — must fail first):
-- [ ] T029 [US3] Write use case test for `clearAll()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: clear with multiple repos indexed, clear when already empty (no-op), verify browseSkills returns empty after clear
+- [x] T029 [US3] Write use case test for `clearAll()` in `apps/core/tests/lib/catalog/application/CatalogUseCases.test.ts` — cover: clear with multiple repos indexed, clear when already empty (no-op), verify browseSkills returns empty after clear
 
 **Implementation** (make it green):
-- [ ] T030 [US3] Implement `clearAll()` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — delegates to PostgresRepositoryRegistry.clearAll()
-
-**Verify** (GREEN):
-- [ ] Run `pnpm --filter @skillbase/core test -- tests/lib/catalog/application/CatalogUseCases.test.ts` (clearAll subset)
+- [x] T030 [US3] Implement `clearAll()` method in `apps/core/src/lib/catalog/application/CatalogUseCases.ts` — delegates to PostgresRepositoryRegistry.clearAll()
 
 **Checkpoint**: User Story 3 is fully functional — users can manage their indexed repositories.
 
 ---
 
-## Phase 6: UI & Polish
+## Phase 6: API Routes & UI (US1/US2/US3)
 
-**Purpose**: Update frontend components and pages to use new data model, remove old code, and pass quality gates.
+**Purpose**: Expose mutation use cases via HTTP API routes, build the user-facing UI for indexing and managing repositories, update display components, and pass quality gates.
 
-- [ ] T031 Update `apps/core/src/components/SkillCard.astro` — replace old skill fields (author, version, license) with new fields (sourceRepository, sourcePath, invocationType via disableModelInvocation/userInvocable, tags, providers), preserve design system styling
-- [ ] T032 [P] Update `apps/core/src/components/SkillList.astro` — handle multi-repo grouping or display source repository path per skill, integrate with updated SkillCard props
-- [ ] T033 [P] Update `apps/core/src/components/EmptyState.astro` — add states for "no repositories indexed" (prompt to index first repo with guidance) and "all repos missing" (warning with unavailable paths list), keep existing "no skills matching search" state
-- [ ] T034 Update `apps/core/src/pages/index.astro` — remove DATABASE_URL guard (no longer needed since Postgres is not required for skill reads), add missing-repo warning banner, wire updated use cases
-- [ ] T035 Remove old `apps/core/src/lib/shared/skill.ts` — delete the file, update all remaining imports that reference it to use the new Skill type from `apps/core/src/lib/catalog/domain/skill/Skill.ts`
-- [ ] T036 Run `pnpm run verify` from repo root — fix all Biome format/lint errors, Astro typecheck errors, Vitest test failures
-- [ ] T037 Run quickstart.md validation — execute the example code paths (indexRepository, browseSkills, searchSkills, listRepositories, removeRepository, clearAll) to confirm they work end-to-end
+### Task Group G7: API Routes for Repository Mutations
+
+**Context**: The use case methods `indexRepository`, `removeRepository`, and `clearAll` are implemented and tested, but the core app has no HTTP surface for them. Users can only browse/search the empty state. These API routes are the bridge between the use case layer and the UI — every user action must have an HTTP entry point.
+
+- [x] T031 [US1] Replaced by Astro Actions — `apps/core/src/actions/index.ts` defines `indexRepository` action using `defineAction` with Zod input validation, calls `createCatalogUseCases().indexRepository(path)`. Actions are the correct Astro 5 pattern for page-triggered form submissions (see `src/pages/api/AGENTS.md`).
+
+- [x] T032 [P] [US3] Replaced by Astro Actions — `apps/core/src/actions/index.ts` defines `removeRepository` action, calls `createCatalogUseCases().removeRepository(path)`. No-op for non-indexed paths.
+
+- [x] T033 [P] [US3] Replaced by Astro Actions — `apps/core/src/actions/index.ts` defines `clearAll` action, calls `createCatalogUseCases().clearAll()`.
+
+**Verify** (GREEN):
+- Index a repo via `curl -X POST http://localhost:4321/api/repositories/index -d "path=/valid/repo"`, confirm skills appear on GET `/`
+- Remove via `curl -X POST -d "path=/valid/repo"`, confirm skills disappear
+- Clear all, confirm empty state returns
+
+### Task Group G8: Frontend Components for Indexing & Management
+
+**Context**: The page at `/` already shows a search bar and skill list. Now it needs an indexing form and a repository list so users can trigger indexing/manage repos through the UI. All interaction uses native HTML form submissions — no client-side JavaScript.
+
+- [x] T034 [US1] Create `apps/core/src/components/IndexForm.astro` — form with a text input (`name="path"`, placeholder `/path/to/your-skills-repo`) and submit button ("index"). Submits via native HTML form POST with hidden `_action=index` field. Displays validation errors and success messages using component props from the page's action call. Uses design system input/button classes.
+
+- [x] T035 [P] [US3] Create `apps/core/src/components/RepositoryList.astro` — lists indexed repositories from `listRepositories()` data passed as props. Each row shows: repository path (monospace, truncate), status badge (green "valid" / amber "missing" / red "invalid"), indexed-at date. Each row has a "Remove" button (inline form with hidden `_action=remove` + `path`). Bottom of list has "Clear all" button (form with hidden `_action=clear-all`). Handles empty state: "No repositories indexed yet. Add one above to get started." Uses design system card/badge classes.
+
+- [x] T036 Update `apps/core/src/pages/index.astro` — compose `IndexForm` (above the search bar) and `RepositoryList` (below search bar, above skill grid). Handle POST requests by reading `_action` hidden field and calling the corresponding Astro action. Keep existing `SearchBar`, `SkillList`, and `EmptyState` components. Final page layout: Header → IndexForm → SearchBar → RepositoryList → [warning banner if missing] → SkillList/EmptyState.
+
+**Verify** (GREEN):
+- Visit `http://localhost:4321` — see IndexForm, empty RepositoryList, empty state
+- Submit a valid repo path via IndexForm → repo appears in list, skills appear in grid
+- Remove a repo → repo disappears, skills disappear
+- Clear all → all repos removed, empty state returns
+
+### Task Group G9: Update Existing Display Components
+
+- [x] T037 Update `apps/core/src/components/SkillCard.astro` — replace old skill fields (author, version, license) with new fields (sourceRepository, sourcePath, invocationType via disableModelInvocation/userInvocable, tags, providers), preserve design system styling
+- [x] T038 [P] Update `apps/core/src/components/SkillList.astro` — handle multi-repo grouping or display source repository path per skill, integrate with updated SkillCard props
+- [x] T039 [P] Update `apps/core/src/components/EmptyState.astro` — add states for "no repositories indexed" (prompt to index first repo with guidance) and "all repos missing" (warning with unavailable paths list), keep existing "no skills matching search" state
+- [x] T040 Update `apps/core/src/pages/index.astro` — remove DATABASE_URL guard (no longer needed since Postgres is not required for skill reads), add missing-repo warning banner, wire updated use cases. NOTE: This is the original page wiring (browse/search/list) — the new component composition from T036 builds on top of this.
+
+### Task Group G10: Cleanup & Quality Gates
+
+- [x] T041 Remove old `apps/core/src/lib/shared/skill.ts` — delete the file, update all remaining imports that reference it to use the new Skill type from `apps/core/src/lib/catalog/domain/skill/Skill.ts`
+- [x] T042 Run `pnpm run verify` from repo root — fix all Biome format/lint errors, Astro typecheck errors, Vitest test failures
+- [x] T043 Run quickstart.md validation — execute the example code paths (indexRepository, browseSkills, searchSkills, listRepositories, removeRepository, clearAll) to confirm they work end-to-end
 
 ---
 
@@ -196,6 +229,10 @@ Use case tests call the system ONLY through use case methods. They never touch r
   - US3 (Phase 5): Depends on US1 (needs PostgresRepositoryRegistry wired). Can start in parallel with US2 since both only read from repos written by US1.
   - Proceed in priority order: P1 → P2 → P3
 - **UI & Polish (Phase 6)**: Depends on all completed user stories
+  - Task Group G7 (API Routes): Depends on US1 and US3 use cases being implemented. T031 depends on DI wiring (T019). T032/T033 are parallel with each other and with T031.
+  - Task Group G8 (Frontend Components): Depends on G7 (API routes must exist for forms to POST to). T034 depends on T031. T035 depends on T032/T033. T036 depends on T034/T035.
+  - Task Group G9 (Display Components): Depends on US2 types. T037 is already done. T038/T039 are parallel.
+  - Task Group G10 (Cleanup & Quality): Depends on all preceding groups.
 
 ### User Story Dependencies
 
@@ -218,7 +255,9 @@ Use case tests call the system ONLY through use case methods. They never touch r
 - T010 ∥ T011 (Phase 2, after T009)
 - T014 ∥ T015 (Phase 3 US1, before T016)
 - T018 ∥ T019 (Phase 3 US1, after T017)
-- T032 ∥ T033 (Phase 6)
+- T032 ∥ T033 (Phase 6, API routes for remove and clear-all are independent)
+- T034 ∥ T035 (Phase 6, IndexForm and RepositoryList are different components)
+- T038 ∥ T039 (Phase 6, update existing display components)
 - US2 and US3 phases can partially overlap (both read from repos indexed by US1)
 
 ---
@@ -260,7 +299,9 @@ Verify GREEN: Run tests
 2. Add US1 → All US1 tests pass → Users can index repos (MVP!)
 3. Add US2 → All US2 tests pass → Users can browse/search indexed skills
 4. Add US3 → All US3 tests pass → Users can manage their index
-5. Add UI + Polish → Full end-to-end feature with updated frontend
+5. Add API Routes (G7) → HTTP surface for all mutations → curl-testable
+6. Add Frontend Components (G8) → Full UI for indexing and management
+7. Add Display + Cleanup (G9/G10) → Full end-to-end feature with updated frontend
 
 ---
 

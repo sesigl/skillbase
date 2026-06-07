@@ -167,7 +167,8 @@ For each use case method in `contracts/`:
 3. For each entity that method needs, add an implementation task
 4. For each repository/service the method calls, add an implementation task
 5. For each wiring/infrastructure change, add an implementation task
-6. Mark tasks that can be done in parallel with [P]
+6. **If the feature has a UI** (web app, mobile app, CLI): For each user-facing action, add a task to create the UI element (page, form, dialog, API route, or command) that triggers the use case. A use case implementation without an entry point is invisible to users — it does not count as complete.
+7. Mark tasks that can be done in parallel with [P]
 
 ### Example: A User Story with Two Use Cases
 

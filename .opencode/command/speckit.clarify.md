@@ -38,7 +38,8 @@ Internally scan these categories, assigning **Clear / Partial / Missing**:
 
 - **Functional Scope & Behavior** — Core user goals, out-of-scope, user roles
 - **Domain & Data Model** — Entities, identity, lifecycle, scale
-- **Interaction & UX Flow** — User journeys, error/empty/loading states
+- **Interaction & UX Flow** — User journeys, navigation, error/empty/loading states
+- **User Experience & Interface** — How users interact with the feature through the UI, what pages/screens/dialogs exist, the full interaction flow for every user action, what the user sees and does at each step. If the feature has a UI, ask: "Walk me through the exact steps a user takes from start to finish. What do they click? What do they see?"
 - **Non-Functional Quality Attributes** — Performance, scalability, reliability, observability, security
 - **Integration & External Dependencies** — External services, failure modes, formats
 - **Edge Cases & Failure Handling** — Negative scenarios, concurrency, conflicts

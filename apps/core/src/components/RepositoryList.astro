@@ -1,0 +1,85 @@
+---
+import type { IndexedRepository } from '@lib/catalog/domain/repository-registry/IndexedRepository';
+
+interface Props {
+  repositories: IndexedRepository[];
+}
+
+const { repositories } = Astro.props;
+
+function statusClass(status: string): string {
+  switch (status) {
+    case 'valid':
+      return 'border-[var(--success)] text-[var(--success)]';
+    case 'missing':
+      return 'border-[var(--warning)] text-[var(--warning)]';
+    default:
+      return 'border-[var(--danger)] text-[var(--danger)]';
+  }
+}
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(date));
+}
+---
+
+<div class="mb-10">
+  <h2 class="font-display text-lg font-semibold text-[var(--fg)] mb-4">
+    indexed repositories
+  </h2>
+
+  {
+    repositories.length === 0 ? (
+      <p class="font-sans text-sm text-[var(--fg-muted)]">
+        No repositories indexed yet. Add one above to get started.
+      </p>
+    ) : (
+      <div class="space-y-2">
+        {repositories.map((repo) => (
+          <div class="card flex items-center justify-between gap-4 p-4">
+            <div class="min-w-0 flex-1">
+              <p class="font-mono text-sm text-[var(--fg)] truncate" title={repo.path}>
+                {repo.path}
+              </p>
+              <p class="font-mono text-2xs text-[var(--fg-faint)] mt-1">
+                {formatDate(repo.indexedAt)}
+              </p>
+            </div>
+
+            <span class={`tag shrink-0 ${statusClass(repo.lastStatus)}`}>
+              {repo.lastStatus}
+            </span>
+
+            <form method="post" class="shrink-0">
+              <input type="hidden" name="_action" value="remove" />
+              <input type="hidden" name="path" value={repo.path} />
+              <button
+                type="submit"
+                class="rounded-md border border-[var(--border)] px-3 py-1 font-sans text-xs text-[var(--fg-muted)] transition-all hover:border-[var(--danger)] hover:text-[var(--danger)] active:scale-[0.98]"
+              >
+                remove
+              </button>
+            </form>
+          </div>
+        ))}
+
+        <form method="post" class="pt-4">
+          <input type="hidden" name="_action" value="clear-all" />
+          <input type="hidden" name="confirm" value="true" />
+          <button
+            type="submit"
+            class="rounded-md border border-[var(--danger)] px-4 py-1.5 font-sans text-xs text-[var(--danger)] transition-all hover:bg-[var(--danger-wash)] active:scale-[0.98]"
+          >
+            clear all
+          </button>
+        </form>
+      </div>
+    )
+  }
+</div>

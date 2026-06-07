@@ -95,9 +95,16 @@ apps/core/
 │   │   ├── SkillCard.astro                      # MODIFY: new fields (no author/version/license)
 │   │   ├── SkillList.astro                      # KEEP or minor update
 │   │   ├── SearchBar.astro                      # KEEP
-│   │   └── EmptyState.astro                     # MODIFY: handle "no repos indexed" state
-│   └── pages/
-│       └── index.astro                          # MODIFY: remove DATABASE_URL guard, add missing-repo warning
+│   │   ├── EmptyState.astro                     # MODIFY: handle "no repos indexed" state
+│   │   ├── IndexForm.astro                      # NEW: path input + submit for indexing repos
+│   │   └── RepositoryList.astro                 # NEW: list indexed repos with remove/clear
+│   ├── pages/
+│   │   ├── index.astro                          # MODIFY: add IndexForm + RepositoryList, remove DATABASE_URL guard
+│   │   └── api/
+│   │       └── repositories/
+│   │           ├── index.ts                     # NEW: POST /api/repositories/index
+│   │           ├── remove.ts                    # NEW: POST /api/repositories/remove
+│   │           └── clear-all.ts                 # NEW: POST /api/repositories/clear-all
 ├── migrations/
 │   ├── sqls/
 │   │   ├── 20260604000000-create-skills-up.sql   # REMOVE

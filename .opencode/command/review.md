@@ -93,10 +93,8 @@ Read the diff. Each section below applies only if its trigger matches the change
 ## Execution
 
 1. Read the git diff and determine which sections above apply.
-2. Present a checklist of what will be reviewed and why.
-3. Ask for confirmation before proceeding.
-4. Execute each review item. Report findings.
-5. If any issues found, list them. Do NOT fix automatically — surface for discussion.
+2. Execute all applicable review items. Report findings inline.
+3. Fix any issues found automatically. Only surface for discussion if the fix is ambiguous or requires a design decision.
 
 ## Next Step
 

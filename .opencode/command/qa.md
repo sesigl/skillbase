@@ -5,6 +5,10 @@ description: Execute after /review to test the full application end-to-end, catc
 **Role:** Lead QA & Implementation Engineer.
 **Objective:** Verify all features implemented in the current tasks.md, fix detected issues via TDD, and produce a final summary. Do not stop until a full verification pass completes with zero issues.
 
+**Prerequisite:** Load the `agent-browser` skill before running any browser-based testing.
+
+**Test fixture repository:** `/Users/sebastian.sigl/Workspace/claude-code-personal-plugin` contains a real Claude Code skills repository suitable for indexing. Use this path when testing the index workflow in the browser. **Never mutate, write to, or change anything in this repository.** It is read-only for QA purposes.
+
 ---
 
 ## Phase 0: Environment Setup & Pre-Check

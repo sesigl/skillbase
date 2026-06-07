@@ -3,17 +3,56 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SearchBar from '../components/SearchBar.astro';
 import SkillList from '../components/SkillList.astro';
 import EmptyState from '../components/EmptyState.astro';
+import IndexForm from '../components/IndexForm.astro';
+import RepositoryList from '../components/RepositoryList.astro';
+import type { Skill } from '@lib/catalog/domain/skill/Skill';
+import type { IndexedRepository, RepositoryScanResult } from '@lib/catalog/domain/repository-registry/IndexedRepository';
+import { actions } from 'astro:actions';
 
 const search = Astro.url.searchParams.get('search') || '';
 
-let skills: import('@lib/shared/skill').Skill[] = [];
+let skills: Skill[] = [];
+let repositories: IndexedRepository[] = [];
 let dbError = false;
+let missingRepos: string[] = [];
+let noRepos = true;
+let indexResult: RepositoryScanResult | undefined;
+let indexError: string | undefined;
 
-if (import.meta.env.DATABASE_URL) {
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const action = formData.get('_action')?.toString();
+
+  try {
+    if (action === 'index') {
+      const { data, error } = await Astro.callAction(actions.indexRepository, formData);
+      if (error) {
+        indexError = error.message;
+      } else {
+        indexResult = data;
+      }
+    } else if (action === 'remove') {
+      const { error } = await Astro.callAction(actions.removeRepository, formData);
+      if (error) throw new Error(error.message);
+    } else if (action === 'clear-all') {
+      const { error } = await Astro.callAction(actions.clearAll, formData);
+      if (error) throw new Error(error.message);
+    }
+  } catch (err) {
+    if (action === 'index') {
+      indexError = err instanceof Error ? err.message : 'Indexing failed';
+    }
+  }
+}
+
+try {
   const { createCatalogUseCases } = await import('@lib/catalog/infrastructure/di');
   const catalog = createCatalogUseCases();
   skills = search ? await catalog.searchSkills(search) : await catalog.browseSkills();
-} else {
+  repositories = await catalog.listRepositories();
+  missingRepos = repositories.filter((r) => r.lastStatus === 'missing').map((r) => r.path);
+  noRepos = repositories.length === 0;
+} catch {
   dbError = true;
 }
 ---
@@ -29,22 +68,32 @@ if (import.meta.env.DATABASE_URL) {
       </p>
     </header>
 
+    <IndexForm indexError={indexError} indexResult={indexResult} />
+
     {
-      dbError ?
-        <div class="flex flex-col items-center justify-center py-24 text-center">
-          <p class="font-display text-lg font-medium text-[var(--fg-muted)]">
-            Database not configured
-          </p>
-          <p class="mt-2 font-mono text-sm text-[var(--fg-faint)]">
-            Set <code class="text-[var(--accent-text)]">DATABASE_URL</code> in <code class="text-[var(--accent-text)]">apps/core/.env</code>
-            and run <code class="text-[var(--accent-text)]">pnpm --filter @skillbase/core migrate</code>
-          </p>
-        </div>
-      :
+      dbError ? (
+        <EmptyState noRepos={true} />
+      ) : (
         <>
           <SearchBar value={search} />
-          {skills.length > 0 ? <SkillList skills={skills} /> : <EmptyState query={search} />}
+
+          <RepositoryList repositories={repositories} />
+
+          {
+            missingRepos.length > 0 && (
+              <div class="mb-6 rounded-lg border border-[var(--warning)] bg-[var(--warning-wash)] p-4">
+                <p class="font-mono text-xs text-[var(--warning)] font-semibold">
+                  Some indexed repositories are no longer available.
+                </p>
+              </div>
+            )
+          }
+
+          {skills.length > 0
+            ? <SkillList skills={skills} />
+            : <EmptyState query={search} noRepos={noRepos} missingRepos={missingRepos} />}
         </>
+      )
     }
   </main>
 </BaseLayout>

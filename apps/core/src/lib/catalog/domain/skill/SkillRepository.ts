@@ -1,6 +1,8 @@
-import type { Skill } from '@lib/shared/skill';
+import type { RepositoryScanResult } from '../repository-registry/IndexedRepository';
+import type { Skill } from './Skill';
 
 export interface SkillRepository {
-  findAll(): Promise<Skill[]>;
-  search(query: string): Promise<Skill[]>;
+  findAll(repoPaths?: string[]): Promise<Skill[]>;
+  search(query: string, repoPaths?: string[]): Promise<Skill[]>;
+  scanRepository(repoPath: string): RepositoryScanResult;
 }

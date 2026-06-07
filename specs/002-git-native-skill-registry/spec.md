@@ -16,12 +16,16 @@
 - Q: Should indexing clone a remote or only accept local paths? → A: Only local paths. The repository must already exist on disk. Indexing is a registration step, not a clone operation.
 - Q: How is the indexed repository list persisted? → A: In PostgreSQL (the existing database). The list of indexed repository paths is configuration metadata, not skill content. Skills themselves are read from the filesystem on demand. The database stores: which paths to scan, when each was last indexed, and validation status.
 - Q: What happens to `@Transactional` on existing use cases? → A: Keep `@Transactional` on `browseSkills()` and `searchSkills()` — even though skill reads are filesystem-only now, removing it risks forgetting to re-add it when database writes are mixed in later. Caveat: no all-or-nothing guarantee while skill reads are outside the transaction boundary.
+- Q: How does the user trigger indexing through the UI? → A: The core app has server-side API routes for all mutation operations. The main page includes an "Index repository" section at the top (below the header, above the skill list) with a text input for the local filesystem path and a submit button. After indexing, results (success with skill count, or validation errors) are displayed inline. The page also shows a list of currently indexed repositories with remove/clear buttons. The search bar and skill list remain below, always visible.
+- Q: What API surface is needed? → A: Three Astro server-side POST endpoints under the core app: `POST /api/repositories/index` (body: `{ path: string }`), `POST /api/repositories/remove` (body: `{ path: string }`), `POST /api/repositories/clear-all`. These return JSON and are called by the page via form submissions or fetch. The existing GET page already handles browse and search via query parameters.
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Index a Local Claude Code Repository (Priority: P1)
 
 A user has a local git repository on disk that contains Claude Code skills (`.claude/skills/` directories with `SKILL.md` files). They want to make those skills visible in Skillbase. They provide the local filesystem path. The system validates that the path points to a valid git repository, scans it for skills following the Claude Code skills specification, and makes them available for browsing and search. If the path is invalid or contains no skills, the system clearly reports every failure so the user knows exactly what is wrong.
+
+**How the user interacts**: The user visits the Skillbase core app at `/`. At the top of the page, below the header, they see an "Index repository" section with a text input field (placeholder: `/path/to/my-skills-repo`) and an "Index" button. The user pastes or types a local filesystem path and clicks "Index". The form submits to `POST /api/repositories/index`. The page then displays the result inline — on success, a green banner with "Indexed N skills from /path/to/repo" appears and the skill list updates. On failure, a red banner lists every validation error with file paths and messages. If the repo is already indexed, a blue banner confirms the re-index with a delta summary (added/updated/removed counts).
 
 **Why this priority**: This is the foundation. Without the ability to index a repository, no skills can be listed or searched. Every other story depends on indexed repositories.
 
@@ -47,6 +51,8 @@ A user has a local git repository on disk that contains Claude Code skills (`.cl
 
 A user visits the Skillbase core application and wants to see all skills from indexed repositories. They see skills listed with their metadata. They can search across all indexed repositories by skill name, description, tags, or provider, and see results that combine skills from all indexed sources.
 
+**How the user interacts**: The user visits `/` in the browser. Below the "Index repository" section (if present) and the search bar, they see a grid of skill cards. Each card shows: skill name (accent-colored, monospace), source repository path (muted, monospace), description (2-line clamp), invocation type badge (green "user-invocable" or amber "model-only"), tags as pills, and provider badges. The search bar at the top supports GET-based form submission — typing "git" and pressing Enter reloads the page with `?search=git` and shows only matching skills. An empty search field returns all skills. No JavaScript is required — everything works via server-side rendering with form submissions and page reloads.
+
 **Why this priority**: This is the user-facing value — seeing and searching skills. It depends on P1 (indexed repositories must exist) but is independently testable once at least one repository is indexed.
 
 **Independent Test**: Index two different git repositories with different sets of skills, then browse the skill list to verify skills from both appear. Search by a shared tag and verify results span both repositories.
@@ -68,6 +74,8 @@ A user visits the Skillbase core application and wants to see all skills from in
 ### User Story 3 - List and Manage Indexed Repositories (Priority: P3)
 
 A user wants to see which repositories are currently indexed, remove one or clear all. They see each repository's path, status (valid, missing, invalid), skill count, and any validation issues. They can remove a repository from the index, which removes its skills from listings and search results.
+
+**How the user interacts**: Below the "Index repository" form and above the skill grid, the page shows a "Repositories" section — a compact list of indexed repository paths, each with a status badge (green "valid", amber "missing", red "invalid"), the date it was indexed, skill count, and a "Remove" button per repo. Clicking "Remove" on a repo submits to `POST /api/repositories/remove` and removes it from the list and the skill grid below. A "Clear all" button at the bottom of the repo list submits to `POST /api/repositories/clear-all` and clears everything with a confirmation. All operations use standard form submissions (no client-side JavaScript required beyond the browser's native form behavior).
 
 **Why this priority**: Repository management is useful but secondary to the core browse/search experience. A user can get value from P1+P2 without a management UI.
 

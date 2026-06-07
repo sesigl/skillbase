@@ -31,5 +31,5 @@ rule:
       kind: member_expression
       has:
         kind: property_identifier
-        regex: "[Rr]epository$"
+        regex: "[Rr](epository|egistry)$"
     stopBy: end

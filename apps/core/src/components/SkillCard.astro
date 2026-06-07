@@ -1,37 +1,43 @@
 ---
+import type { Skill } from '@lib/catalog/domain/skill/Skill';
 const { skill } = Astro.props;
 ---
 
 <article class="card p-6 hover:-translate-y-px">
   <div class="flex items-start justify-between gap-4">
     <div class="min-w-0">
-      <h3 class="font-mono text-base font-semibold text-[var(--fg)]">
+      <h3 class="font-mono text-base font-semibold">
         <span class="text-[var(--accent-text)]">{skill.name}</span>
-        <span class="text-[var(--fg-muted)]">@</span>
-        {skill.author}
       </h3>
+      <p class="mt-1 font-mono text-2xs text-[var(--fg-faint)] truncate" title={skill.sourceRepository}>
+        {skill.sourceRepository}
+      </p>
       <p class="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed line-clamp-2">
         {skill.description}
       </p>
     </div>
-    <span class="tag shrink-0">
-      v{skill.version}
+    <span class={`tag shrink-0 ${skill.userInvocable ? 'border-[var(--green-600)] text-[var(--green-600)]' : 'border-[var(--amber-600)] text-[var(--amber-600)]'}`}>
+      {skill.userInvocable ? 'user-invocable' : 'model-invocation-disabled'}
     </span>
   </div>
 
-  <div class="mt-4 flex flex-wrap gap-2">
-    {skill.tags.map((tag: string) => (
-      <span class="tag">
-        {tag}
-      </span>
-    ))}
-  </div>
+  {skill.tags.length > 0 && (
+    <div class="mt-4 flex flex-wrap gap-2">
+      {skill.tags.map((tag: string) => (
+        <span class="tag">
+          {tag}
+        </span>
+      ))}
+    </div>
+  )}
 
-  <div class="mt-3 flex flex-wrap gap-1.5">
-    {skill.providers.map((provider: string) => (
-      <span class="tag rounded-md bg-[var(--surface-2)] text-[var(--fg-faint)]">
-        {provider}
-      </span>
-    ))}
-  </div>
+  {skill.providers.length > 0 && (
+    <div class="mt-3 flex flex-wrap gap-1.5">
+      {skill.providers.map((provider: string) => (
+        <span class="tag rounded-md bg-[var(--surface-2)] text-[var(--fg-faint)]">
+          {provider}
+        </span>
+      ))}
+    </div>
+  )}
 </article>

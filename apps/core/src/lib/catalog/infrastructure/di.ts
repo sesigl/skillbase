@@ -1,9 +1,11 @@
 import { getDatabaseConnection } from '../../shared/database';
 import { CatalogUseCases } from '../application/CatalogUseCases';
-import { PostgresSkillRepository } from './persistence/PostgresSkillRepository';
+import { FilesystemSkillRepository } from './filesystem/FilesystemSkillRepository';
+import { PostgresRepositoryRegistry } from './persistence/PostgresRepositoryRegistry';
 
 export function createCatalogUseCases(): CatalogUseCases {
   const db = getDatabaseConnection();
-  const repository = new PostgresSkillRepository(db);
-  return new CatalogUseCases(repository);
+  const registry = new PostgresRepositoryRegistry(db);
+  const skillRepo = new FilesystemSkillRepository();
+  return new CatalogUseCases(skillRepo, registry);
 }

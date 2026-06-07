@@ -21,6 +21,13 @@
   - Tested independently
   - Deployed independently
   - Demonstrated to users independently
+
+  UX REQUIREMENT: If the feature has a user interface, describe the full interaction
+  flow: what the user sees, what they click/tap/type, what feedback they receive.
+  For EVERY user action, answer: "How does the user trigger this? Through what UI
+  element? What page/screen/dialog is it on?" Do not assume an action will be
+  reachable through the UI unless you explicitly describe how. A use case without
+  a UI entry point is invisible to users — it does not count as implemented.
 -->
 
 ### User Story 1 - [Brief Title] (Priority: P1)
