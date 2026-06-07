@@ -158,7 +158,7 @@ metadata:
       expect(result.skills[0].tags).toContain('deployment');
     });
 
-    it('infers claude-code provider from Claude Code fields', () => {
+    it('ignores Claude Code fields in frontmatter — only metadata.providers is used', () => {
       const tmpDir = trackDir(createTempGitRepo());
       writeSkillFile(
         tmpDir,
@@ -168,10 +168,10 @@ metadata:
 
       const result = repo.scanRepository(tmpDir);
 
-      expect(result.skills[0].providers).toEqual(['claude-code']);
+      expect(result.skills[0].providers).toEqual([]);
     });
 
-    it('returns unknown provider when no Claude Code fields present', () => {
+    it('returns empty providers when no metadata.providers set', () => {
       const tmpDir = trackDir(createTempGitRepo());
       writeSkillFile(
         tmpDir,
@@ -181,7 +181,7 @@ metadata:
 
       const result = repo.scanRepository(tmpDir);
 
-      expect(result.skills[0].providers).toEqual(['unknown']);
+      expect(result.skills[0].providers).toEqual([]);
     });
 
     it('ignores directory without SKILL.md and reports warning', () => {

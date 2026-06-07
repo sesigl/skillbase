@@ -29,16 +29,6 @@ const TAG_TAXONOMY = [
   'cd',
 ];
 
-const CLAUDE_CODE_FIELDS = [
-  'context',
-  'agent',
-  'model',
-  'effort',
-  'paths',
-  'shell',
-  'disallowed-tools',
-];
-
 const SKILL_MD_MAX_BYTES = 1_048_576;
 
 export class FilesystemSkillRepository implements SkillRepository {
@@ -382,12 +372,7 @@ function deriveProviders(frontmatter: Record<string, unknown>): string[] {
       .filter(Boolean);
   }
 
-  const hasClaudeField = CLAUDE_CODE_FIELDS.some((field) => {
-    const hyphenated = field.replace(/([A-Z])/g, '-$1').toLowerCase();
-    return frontmatter[hyphenated] !== undefined || frontmatter[field] !== undefined;
-  });
-
-  return hasClaudeField ? ['claude-code'] : ['unknown'];
+  return [];
 }
 
 function extractAssets(body: string): string[] {
