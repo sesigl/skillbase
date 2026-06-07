@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/pages/**/*.{ts,astro}", "tests/helpers/testDatabase.ts"],
+  "project": ["src/**/*.{ts,astro}", "tests/**/*.ts"],
+  "ignoreBinaries": ["biome"],
+  "ignoreDependencies": [
+    "db-migrate-pg",
+    "dotenv",
+    "@fontsource-variable/geist",
+    "@fontsource-variable/space-grotesk",
+    "@fontsource/jetbrains-mono",
+    "lucide",
+    "autoprefixer",
+    "testcontainers",
+    "@ast-grep/cli"
+  ],
+  "ignoreExportsUsedInFile": true,
+  "rules": {
+    "unlisted": "error",
+    "exports": "error",
+    "types": "error"
+  }
+}

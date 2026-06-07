@@ -1,0 +1,12 @@
+---
+import type { Skill } from '@lib/shared/skill';
+import SkillCard from './SkillCard.astro';
+
+const { skills } = Astro.props;
+---
+
+<div class="grid gap-4">
+  {skills.map((skill: Skill) => (
+    <SkillCard skill={skill} />
+  ))}
+</div>

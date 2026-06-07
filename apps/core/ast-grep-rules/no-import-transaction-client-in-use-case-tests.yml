@@ -1,0 +1,22 @@
+id: no-import-transaction-client-in-use-case-tests
+language: TypeScript
+severity: error
+message: Importing getTransactionClient in non-repository test — use case tests must not access the database directly.
+note: |
+  Use case and application-level integration tests must not access the
+  database directly. Seed test data through use case classes and
+  repository interfaces.
+
+  Allowed exceptions: *Repository.test.ts, database-smoke.test.ts, Transactional.test.ts
+files:
+  - "tests/**/*.test.ts"
+ignores:
+  - "tests/**/*Repository.test.ts"
+  - "tests/**/database-smoke.test.ts"
+  - "tests/**/Transactional.test.ts"
+rule:
+  kind: import_statement
+  pattern: import { $$$IMPORTS } from $SOURCE
+  has:
+    pattern: getTransactionClient
+    stopBy: end

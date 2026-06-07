@@ -1,0 +1,11 @@
+id: no-pool-connect-in-repository
+language: TypeScript
+severity: error
+message: Repository calls pool.connect() — use getTransactionClient() instead.
+note: |
+  Postgres repositories must use getTransactionClient() from TransactionContext.
+  They must NOT call pool.connect() directly. Repositories must be stateless.
+files:
+  - "src/lib/**/Postgres*Repository.ts"
+rule:
+  pattern: pool.connect($$$ARGS)

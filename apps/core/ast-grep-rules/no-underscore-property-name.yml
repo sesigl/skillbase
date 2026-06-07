@@ -1,0 +1,15 @@
+id: no-underscore-property-name
+language: TypeScript
+severity: error
+message: Property name uses underscore prefix — remove the underscore prefix.
+note: |
+  Do not use underscore prefixes in field names.
+  For private fields, use plain names (no getters/setters needed).
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+  - "tests/**/*.ts"
+  - "tests/**/*.tsx"
+rule:
+  regex: "^_[a-zA-Z]"
+  kind: property_identifier

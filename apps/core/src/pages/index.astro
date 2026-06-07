@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBar from '../components/SearchBar.astro';
+import SkillList from '../components/SkillList.astro';
+import EmptyState from '../components/EmptyState.astro';
+
+const search = Astro.url.searchParams.get('search') || '';
+
+let skills: import('@lib/shared/skill').Skill[] = [];
+let dbError = false;
+
+if (import.meta.env.DATABASE_URL) {
+  const { createCatalogUseCases } = await import('@lib/catalog/infrastructure/di');
+  const catalog = createCatalogUseCases();
+  skills = search ? await catalog.searchSkills(search) : await catalog.browseSkills();
+} else {
+  dbError = true;
+}
+---
+
+<BaseLayout>
+  <main class="container-content py-16">
+    <header class="mb-12">
+      <h1 class="font-display text-[var(--text-3xl)] font-semibold tracking-[-0.02em]">
+        skillbase
+      </h1>
+      <p class="mt-2 font-mono text-sm text-[var(--fg-muted)]">
+        governance and analytics for AI coding skills
+      </p>
+    </header>
+
+    {
+      dbError ?
+        <div class="flex flex-col items-center justify-center py-24 text-center">
+          <p class="font-display text-lg font-medium text-[var(--fg-muted)]">
+            Database not configured
+          </p>
+          <p class="mt-2 font-mono text-sm text-[var(--fg-faint)]">
+            Set <code class="text-[var(--accent-text)]">DATABASE_URL</code> in <code class="text-[var(--accent-text)]">apps/core/.env</code>
+            and run <code class="text-[var(--accent-text)]">pnpm --filter @skillbase/core migrate</code>
+          </p>
+        </div>
+      :
+        <>
+          <SearchBar value={search} />
+          {skills.length > 0 ? <SkillList skills={skills} /> : <EmptyState query={search} />}
+        </>
+    }
+  </main>
+</BaseLayout>

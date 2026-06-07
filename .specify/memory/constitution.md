@@ -1,33 +1,40 @@
 <!--
   SYNC IMPACT REPORT
   ==================
-  Version change: N/A (template) -> 1.0.0
-  Added sections: All (initial creation — Preamble, 7 Core Principles, Project Structure, Governance)
+  Version change: 1.0.0 -> 2.0.0 (MAJOR: redefined Principles V and VI)
+  Added sections: None
   Removed sections: None
-  Modified principles: None (initial)
+  Modified principles:
+    - V: "Multi-Provider Skill Format" -> "Git-Native Skill Source" (skills from team repo, not global catalog)
+    - VI: "Public-First Design" -> "Usage Transparency" (invocation tracking + analytics as core)
+  Preamble: Rewritten to describe governance + analytics tool, not a registry
 
   Templates requiring updates:
     - .specify/templates/plan-template.md         ✅ no update needed (Constitution Check gate is generic)
     - .specify/templates/spec-template.md          ✅ no update needed
     - .specify/templates/tasks-template.md         ✅ no update needed
     - .specify/templates/checklist-template.md     ✅ no update needed
+    - CONTEXT.md                                   ⚠️ requires full rewrite
+    - spec.md                                      ⚠️ requires update
 
   Follow-up TODOs:
-    - AGENTS.md is currently a stub; it must be expanded with concrete technology choices,
-      folder structure conventions, and deterministic check commands once the first
-      implementation plan is created.
-    - RATIFICATION_DATE is today (2026-06-04). No prior adoption date exists.
+    - Landing page copy must be rewritten to match new positioning
+    - README.md tagline must be updated
+    - Design system README "What is Skillbase" section must be updated
+    - Data model needs skill_invocations table (future spec)
+    - GitHub integration for skill source (future spec)
 -->
 
 # Skillbase Constitution
 
 ## Preamble
 
-Skillbase is an open-source, self-hostable hub for managing AI coding
-skills across providers (OpenCode, Claude Code, and others). It provides
-a single interface to add, remove, search, publish, and benchmark skills
-— eventually extending into governance, versioning, usage analytics, MCP
-exposure, and compatibility layers.
+Skillbase is a governance and analytics tool for AI coding skills. Point
+it at your team's GitHub plugin repository and it shows which skills
+exist, who uses them, how often, and whether they measurably improve
+outcomes. It fills the gap that Anthropic's own issue tracker documents
+(#35319: no mature tool tells teams which named skills are being invoked
+and whether they help).
 
 This constitution defines non-negotiable principles that govern every
 implementation decision. All plans, specifications, tasks, and code
@@ -108,41 +115,46 @@ feasible) MUST be written in TypeScript.
 cross-package refactoring, and ensures type safety across the entire
 stack.
 
-### V. Multi-Provider Skill Format
+### V. Git-Native Skill Source
 
-Skills managed by Skillbase MUST be stored in a provider-agnostic
-format.
+Skills are read from the team's own GitHub plugin repository — not a
+global public catalog.
 
-- The canonical skill format is a self-contained directory with a
-  mandatory `SKILL.md` (or equivalent manifest) and optional supporting
-  files (scripts, templates, references).
-- Metadata (name, description, version, author, provider compatibility,
-  tags) MUST be machine-readable from the manifest.
-- Export adapters translate the canonical format into
-  provider-specific formats (OpenCode skills, Claude Code plugins,
-  etc.). No provider lock-in.
-- The canonical format MUST be documented and versioned independently
-  from the application.
+- Skills live in a GitHub repository as Claude Code / OpenCode plugin
+  directories, each with a `SKILL.md` manifest.
+- Skillbase pulls skill metadata from the configured repository (via
+  GitHub API or local checkout), staying in sync with git history.
+- Metadata (name, description, version, author, tags) is parsed from the
+  repository's manifest files — no separate publishing step required.
+- Version history is tracked via git commits. Governance checks run
+  against metadata and tag consistency across versions.
 
-**Rationale**: A neutral format is the foundation for multi-provider
-compatibility and future ecosystem growth.
+**Rationale**: Skills already live in version-controlled repositories.
+Skillbase reads what exists rather than forcing a separate publishing
+flow.
 
-### VI. Public-First Design
+### VI. Usage Transparency
 
-Skillbase v1 is a public, single-user application without
-authentication.
+Skillbase tracks and surfaces skill invocation data so teams understand
+what's being used and whether it helps.
 
-- Every feature MUST be fully functional without a login wall.
-- The UI is publicly accessible; no gated content.
-- API endpoints (if any) are public and documented.
-- Authentication/authorization (OAuth, API keys, multi-tenancy) is an
-  opt-in layer for a future version — not baked into the v1 data model
-  in a way that blocks the public use case.
-- Rate limiting and abuse prevention are handled at the infrastructure
-  level (reverse proxy, CDN), not in application code.
+- Skill invocation tracking MUST be the core data pipeline: which named
+  skills are invoked, how often, by whom, and with what measurable
+  quality impact.
+- The system MUST expose invocation data through a dashboard that answers:
+  which skills are most used, which are idle, which correlate with
+  better outcomes.
+- Collection MUST be opt-in via hooks or OpenTelemetry instrumentation
+  — no telemetry without explicit setup.
+- Data stays local by default. A future team-analytics layer may offer
+  shared dashboards, but the single-user/self-hosted path MUST remain
+  fully functional without cloud telemetry.
+- The initial version is single-user without authentication. Multi-user
+  team analytics is a planned extension.
 
-**Rationale**: Public-first reduces friction for early adopters and
-demonstrates the product's value immediately.
+**Rationale**: Teams with 183 skills have no way to know which ones
+matter. Usage data turns a growing pile of skills into a manageable,
+evidence-backed practice.
 
 ### VII. Deterministic Quality Gates
 
@@ -233,4 +245,4 @@ Both documents MUST be kept in sync. If a conflict arises, this
 constitution prevails for architectural decisions; `AGENTS.md` prevails
 for operational details.
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-04
+**Version**: 2.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-06

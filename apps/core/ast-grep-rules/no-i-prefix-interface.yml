@@ -1,0 +1,19 @@
+id: no-i-prefix-interface
+language: TypeScript
+severity: error
+message: Interface "$NAME" uses the "I" prefix — use a domain-meaningful name instead.
+note: |
+  Interfaces must not use the "I" prefix (e.g. IFoo).
+  The interface carries the clean, domain-meaningful name (e.g. SkillRepository).
+  Implementations carry a technology or variant qualifier (e.g. PostgresSkillRepository).
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+rule:
+  kind: interface_declaration
+  has:
+    field: name
+    regex: "^I[A-Z]"
+  inside:
+    kind: export_statement
+    stopBy: neighbor

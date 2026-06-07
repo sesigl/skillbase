@@ -1,0 +1,29 @@
+id: no-mock-in-use-case-tests
+language: TypeScript
+severity: error
+message: Application test should not use mocks. Use real Postgres repositories with Testcontainers.
+note: |
+  Use case tests must interact with the system only through use case
+  methods backed by real Postgres repositories (Testcontainers).
+
+  Banned patterns:
+  - vi.fn() — use real implementations instead of Vitest mocks
+  - createMock*() — use real DI factories instead of mock helpers
+  - class Mock*Repository — use real PostgresSkillRepository, etc.
+  - class * implements *Repository — test files must not define
+    mock repository implementations
+
+  See apps/core/tests/AGENTS.md for the golden rule.
+files:
+  - "tests/lib/**/application/**/*.test.ts"
+rule:
+  any:
+    - pattern: vi.fn($$$)
+    - kind: call_expression
+      has:
+        kind: identifier
+        regex: "^createMock\\w*"
+    - kind: class_declaration
+      has:
+        kind: type_identifier
+        regex: "Mock\\w*Repository"

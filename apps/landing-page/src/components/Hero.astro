@@ -1,0 +1,50 @@
+<section class="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-20" style="background-image: radial-gradient(oklch(0.300 0.012 261 / 0.3) 1px, transparent 1px); background-size: 24px 24px;">
+  <span class="font-mono text-[var(--text-2xs)] uppercase tracking-[0.08em] text-[var(--accent-text)]">
+    governance + analytics
+  </span>
+
+  <h1 class="mt-6 max-w-3xl text-center font-display text-[var(--text-4xl)] font-semibold leading-[1.08] tracking-[-0.02em]">
+    Know your skills.
+    <span class="text-[var(--accent-text)]">Improve your code.</span>
+  </h1>
+
+  <p class="mt-6 max-w-lg text-center text-[var(--text-md)] leading-relaxed text-[var(--fg-muted)]">
+    Point Skillbase at your GitHub plugin repo and see which AI skills your team uses,
+    how often, and whether they actually help. Self-host it &mdash; it's open source.
+  </p>
+
+  <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+    <a
+      href="https://github.com/sesigl/skillbase"
+      class="btn-primary px-6 py-3"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      View on GitHub
+    </a>
+    <a
+      href="https://github.com/sponsors/sesigl"
+      class="btn-secondary px-6 py-3"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Sponsor
+    </a>
+  </div>
+
+  <div class="code-panel mt-16 w-full max-w-lg p-5 whitespace-pre-wrap">
+    <span class="text-[var(--lime-300)]">$</span> skillbase stats --repo<span class="text-[var(--code-line)]">=acme/skills</span>
+    <br />
+    <span class="text-[var(--code-line)]">skill            invocs  users  last   quality</span>
+    <br />
+    <span class="text-[var(--lime-300)]">commit-helper</span>    <span class="text-[var(--code-fg)]">847    12     2h    </span><span class="text-[var(--lime-300)]">████</span><span class="text-[var(--stone-700)]">░</span> <span class="text-[var(--lime-300)]">92</span>
+    <br />
+    <span class="text-[var(--code-fg)]">code-reviewer</span>    <span class="text-[var(--code-fg)]">621    9      3h    </span><span class="text-[var(--stone-400)]">███</span><span class="text-[var(--stone-700)]">░░</span> <span class="text-[var(--code-fg)]">78</span>
+    <br />
+    <span class="text-[var(--lime-300)]">git-conventions</span>  <span class="text-[var(--code-fg)]">504    14     1h    </span><span class="text-[var(--lime-300)]">████</span><span class="text-[var(--stone-700)]">░</span> <span class="text-[var(--lime-300)]">95</span>
+    <br />
+    <span class="text-[var(--code-fg)]">frontend-design</span>  <span class="text-[var(--code-fg)]">312    6      1d    </span><span class="text-[var(--stone-400)]">██</span><span class="text-[var(--stone-700)]">░░░</span> <span class="text-[var(--code-fg)]">67</span>
+    <br />
+    <span class="text-[var(--code-line)]">pdf-toolkit</span>      <span class="text-[var(--code-line)]">98     3      5d    </span><span class="text-[var(--stone-600)]">░</span><span class="text-[var(--stone-700)]">░░░░</span> <span class="text-[var(--code-line)]">41</span>
+  </div>
+</section>

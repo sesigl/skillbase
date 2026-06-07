@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);padding:26px 30px;display:flex;flex-direction:column;gap:16px}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-sans);font-size:14px;font-weight:600;border-radius:var(--radius-md);padding:10px 16px;border:1px solid transparent;cursor:pointer;line-height:1}
+  .btn svg{width:16px;height:16px}
+  .primary{background:var(--lime-400);color:var(--ink)}
+  .primary.hover{background:var(--lime-500)}
+  .secondary{background:var(--surface);color:var(--ink);border-color:var(--border-strong)}
+  .secondary.hover{border-color:var(--ink)}
+  .ghost{background:transparent;color:var(--fg-muted)}
+  .ghost.hover{background:var(--surface-2);color:var(--ink)}
+  .disabled{background:var(--stone-100);color:var(--stone-400);border-color:var(--stone-200);cursor:not-allowed}
+  .lab{font-family:var(--font-mono);font-size:10px;color:var(--fg-faint);text-transform:uppercase;letter-spacing:.06em;width:64px;flex:none}
+</style>
+</head>
+<body>
+  <div class="row"><span class="lab">rest</span>
+    <button class="btn primary"><i data-lucide="download"></i>Install skill</button>
+    <button class="btn secondary"><i data-lucide="github"></i>Star on GitHub</button>
+    <button class="btn ghost">Read docs</button>
+  </div>
+  <div class="row"><span class="lab">hover</span>
+    <button class="btn primary hover"><i data-lucide="download"></i>Install skill</button>
+    <button class="btn secondary hover"><i data-lucide="github"></i>Star on GitHub</button>
+    <button class="btn ghost hover">Read docs</button>
+    <button class="btn disabled">Disabled</button>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

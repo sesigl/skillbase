@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper-sunk);font-family:var(--font-sans);padding:22px 28px}
+  .term{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md)}
+  .bar{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--code-border)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .title{font-family:var(--font-mono);font-size:11px;color:var(--stone-500);margin-left:8px}
+  pre{margin:0;padding:16px 18px;font-family:var(--font-mono);font-size:13px;line-height:1.7}
+  .ln{color:var(--stone-600);user-select:none;margin-right:14px}
+  .c{color:var(--stone-500)}
+  .k{color:var(--lime-300)}
+  .s{color:#7fd0ff}
+  .p{color:var(--stone-100)}
+  .ok{color:var(--green-100,#cdeede)}
+</style>
+</head>
+<body>
+  <div class="term">
+    <div class="bar">
+      <span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span>
+      <span class="title">~/skillbase — pnpm run verify</span>
+    </div>
+    <pre><span class="ln">1</span><span class="c"># track skill usage</span>
+<span class="ln">2</span><span class="k">$</span> <span class="p">skillbase stats</span> <span class="s">--repo=acme/skills</span>
+<span class="ln">3</span><span class="p">commit-helper</span>    <span class="p">847 invocations</span>  <span class="p">12 users</span>  <span class="ok">█████</span> <span class="p">92</span>
+<span class="ln">4</span><span class="p">git-conventions</span>  <span class="p">504 invocations</span>  <span class="p">14 users</span>  <span class="ok">███░░</span> <span class="p">78</span></pre>
+  </div>
+</body>
+</html>

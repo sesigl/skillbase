@@ -1,0 +1,26 @@
+id: no-underscore-identifier
+language: TypeScript
+severity: error
+message: Identifier uses underscore prefix — remove the underscore prefix.
+note: |
+  Do not use underscore prefixes in variable or field names.
+  Exception: Unused function/method parameters may use underscore prefix (_param) to satisfy TypeScript's unused variable checks.
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+  - "tests/**/*.ts"
+  - "tests/**/*.tsx"
+rule:
+  regex: "^_[a-zA-Z]"
+  kind: identifier
+  not:
+    any:
+      - inside:
+          kind: import_specifier
+          stopBy: neighbor
+      - inside:
+          kind: required_parameter
+          stopBy: neighbor
+      - inside:
+          kind: optional_parameter
+          stopBy: neighbor

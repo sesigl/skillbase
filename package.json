@@ -6,11 +6,17 @@
     "node": ">=25.9.0"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "verify": "node --import tsx scripts/verify.ts",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check ."
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
-    "husky": "^9.1.7"
+    "@biomejs/biome": "2.4.16",
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "husky": "9.1.7",
+    "tsx": "4.22.4"
   }
 }

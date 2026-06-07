@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-mono);padding:30px 30px 34px;display:flex;gap:22px;align-items:center}
+  .item{display:flex;flex-direction:column;align-items:center;gap:13px;flex:1}
+  .box{width:100%;height:62px;background:var(--surface);border:1px solid var(--stone-200);border-radius:var(--radius-lg)}
+  .lab{font-size:10.5px;color:var(--fg-muted);text-align:center}
+</style>
+</head>
+<body>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-xs)"></div><span class="lab">xs · hairline</span></div>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-sm)"></div><span class="lab">sm · resting card</span></div>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-md)"></div><span class="lab">md · hover / menu</span></div>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-lg)"></div><span class="lab">lg · modal</span></div>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-accent);border-color:var(--lime-400)"></div><span class="lab">accent · CTA glow</span></div>
+</body>
+</html>

@@ -1,6 +1,12 @@
+packages:
+  - "apps/*"
+
 saveExact: true
 engineStrict: true
-
-# Supply-chain security (pnpm v11 defaults — explicit for visibility)
-# minimumReleaseAge: 1440     # 1 day delay before installing new versions (v11 default)
-# blockExoticSubdeps: true    # blocks transitive deps from git/tarball (v11 default)
+allowBuilds:
+  '@ast-grep/cli': true
+  cpu-features: set this to true or false
+  esbuild: true
+  protobufjs: set this to true or false
+  sharp: true
+  ssh2: set this to true or false

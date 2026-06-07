@@ -1,0 +1,28 @@
+id: no-inline-postgres-repository-call-in-use-case-tests
+language: TypeScript
+severity: error
+message: Direct method call on inline Postgres repository in use-case test.
+note: |
+  Use case integration tests must not call methods directly on Postgres
+  repository instances. Patterns like `new PostgresXxxRepository().create(...)`
+  bypass the application layer.
+
+  For data seeding, use use case methods or raw-SQL fixture classes.
+  Postgres repository instances should only be passed as constructor
+  arguments to use case classes.
+
+  Allowed exceptions: *Repository.test.ts, database-smoke.test.ts, Transactional.test.ts
+files:
+  - "tests/**/*UseCases*.test.ts"
+rule:
+  kind: call_expression
+  has:
+    kind: member_expression
+    has:
+      kind: new_expression
+      has:
+        kind: identifier
+        regex: "^Postgres.*Repository$"
+        stopBy: end
+      field: object
+    stopBy: neighbor

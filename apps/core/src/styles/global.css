@@ -1,0 +1,68 @@
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource/jetbrains-mono';
+@import './design-tokens.css';
+
+@tailwind base;
+@tailwind components;
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 font-sans text-sm font-semibold text-fg-onaccent bg-accent border-none rounded-lg cursor-pointer transition-all ease-[var(--ease-out)] duration-200 shadow-accent;
+  }
+  .btn-primary:hover {
+    @apply bg-accent-hover;
+  }
+  .btn-primary:active {
+    @apply scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 font-sans text-sm text-fg-muted bg-transparent border border-border rounded-lg cursor-pointer transition-all ease-[var(--ease-out)] duration-200;
+  }
+  .btn-secondary:hover {
+    @apply border-accent text-accent-text;
+  }
+
+  .card {
+    @apply bg-surface border border-border rounded-xl shadow-sm transition-all ease-[var(--ease-out)] duration-200;
+  }
+  .card:hover {
+    @apply border-border-strong shadow-md;
+  }
+
+  .tag {
+    @apply inline-flex font-mono text-2xs text-fg-muted bg-bg-sunk border border-border rounded-pill px-2.5 py-0.5;
+  }
+
+  .code-panel {
+    @apply font-mono text-xs leading-relaxed text-code-fg bg-code-bg border border-code-border rounded-xl;
+  }
+
+  .input {
+    @apply w-full font-mono text-sm text-fg bg-surface border border-border rounded-lg outline-none transition-colors ease-[var(--ease-out)] duration-200;
+  }
+  .input::placeholder {
+    @apply text-fg-faint;
+  }
+  .input:focus {
+    @apply border-accent;
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+
+  .container-wide {
+    @apply max-w-wide mx-auto px-6;
+  }
+
+  .container-content {
+    @apply max-w-content mx-auto px-6;
+  }
+}
+
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-size: var(--text-base);
+  }
+}

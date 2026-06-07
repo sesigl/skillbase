@@ -1,0 +1,45 @@
+ls:
+  src:
+    .dir: "kebab-case | regex:^\\[[a-zA-Z]+\\]$"
+    .ts: "PascalCase | camelCase | kebab-case | regex:^I[A-Z][a-zA-Z0-9]+$"
+    .tsx: PascalCase | camelCase | kebab-case
+    .js: PascalCase | camelCase | kebab-case
+    .jsx: PascalCase | camelCase | kebab-case
+    .astro: "PascalCase | kebab-case | regex:^\\[[a-zA-Z]+\\]$"
+    .css: kebab-case
+
+  tests:
+    .dir: kebab-case
+    .ts: "PascalCase | camelCase | kebab-case | regex:^I[A-Z][a-zA-Z0-9]+$"
+    .tsx: PascalCase | camelCase | kebab-case
+
+  scripts:
+    .dir: kebab-case
+    .ts: kebab-case
+    .js: kebab-case
+
+  migrations:
+    .dir: kebab-case
+    .js: regex:[0-9]+-[a-z0-9-]+
+    .sql: regex:[0-9]+-[a-z0-9-]+-(?:up|down)
+
+ignore:
+  - node_modules
+  - dist
+  - .git
+  - .github
+  - coverage
+  - .vscode
+  - .idea
+  - .astro
+  - .vercel
+  - build
+  - out
+  - tmp
+  - temp
+  - .cache
+  - .DS_Store
+  - "*.log"
+  - .specify
+  - .claude
+  - .opencode

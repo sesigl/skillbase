@@ -1,0 +1,19 @@
+id: no-i-prefix-type-alias
+language: TypeScript
+severity: error
+message: Type alias "$NAME" uses the "I" prefix — use a domain-meaningful name instead.
+note: |
+  Type aliases must not use the "I" prefix (e.g. IFoo).
+  The type carries the clean, domain-meaningful name.
+  Implementations carry a technology or variant qualifier.
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+rule:
+  kind: type_alias_declaration
+  has:
+    field: name
+    regex: "^I[A-Z]"
+  inside:
+    kind: export_statement
+    stopBy: neighbor

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg-sunk);color:var(--fg);font-family:var(--font-sans);padding:24px;display:grid;place-items:center}
+  .empty{background:var(--surface);border:1px dashed var(--border-strong);border-radius:var(--radius-lg);padding:26px 30px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;max-width:420px}
+  .ic{width:46px;height:46px;border-radius:var(--radius-md);background:var(--surface-2);display:grid;place-items:center}
+  .ic svg{width:22px;height:22px;color:var(--fg-faint)}
+  .title{font-family:var(--font-display);font-weight:600;font-size:18px;color:var(--ink)}
+  .sub{font-size:13.5px;color:var(--fg-muted);line-height:1.5}
+  .sub code{font-family:var(--font-mono);font-size:12px;background:var(--accent-wash);color:var(--accent-text);padding:1px 6px;border-radius:var(--radius-xs)}
+</style>
+</head>
+<body>
+  <div class="empty">
+    <div class="ic"><i data-lucide="search-x"></i></div>
+    <div class="title">No skills match that search</div>
+    <div class="sub">Nothing for <code>image-gen</code> yet. Try a broader term, or contribute the first one.</div>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

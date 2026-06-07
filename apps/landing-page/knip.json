@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/pages/**/*.{ts,astro}"],
+  "project": ["src/**/*.{ts,astro}"],
+  "ignoreDependencies": ["lucide", "autoprefixer"],
+  "ignoreExportsUsedInFile": true,
+  "rules": {
+    "unlisted": "error",
+    "exports": "error",
+    "types": "error"
+  }
+}

@@ -1,0 +1,11 @@
+id: no-this-pool-in-repository
+language: TypeScript
+severity: error
+message: Repository uses this.pool — use getTransactionClient() instead.
+note: |
+  Postgres repositories must use getTransactionClient() from TransactionContext.
+  They must NOT store or use a pool field. Repositories must be stateless.
+files:
+  - "src/lib/**/Postgres*Repository.ts"
+rule:
+  pattern: this.pool

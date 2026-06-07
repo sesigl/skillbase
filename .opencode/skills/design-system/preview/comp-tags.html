@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);padding:26px 30px;display:flex;flex-direction:column;gap:16px}
+  .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+  .tag{font-family:var(--font-mono);font-size:12px;font-weight:500;padding:5px 11px;border-radius:var(--radius-pill);background:var(--surface-2);border:1px solid var(--stone-200);color:var(--fg-muted)}
+  .tag.active{background:var(--lime-400);border-color:var(--lime-400);color:var(--ink)}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;font-weight:500;padding:4px 9px;border-radius:var(--radius-sm)}
+  .badge svg{width:13px;height:13px}
+  .lab{font-family:var(--font-mono);font-size:10px;color:var(--fg-faint);text-transform:uppercase;letter-spacing:.06em;width:64px;flex:none}
+</style>
+</head>
+<body>
+  <div class="row"><span class="lab">tags</span>
+    <span class="tag active">git</span><span class="tag">automation</span><span class="tag">testing</span><span class="tag">claude-code</span><span class="tag">opencode</span><span class="tag">+4</span>
+  </div>
+  <div class="row"><span class="lab">status</span>
+    <span class="badge" style="background:var(--success-wash);color:var(--success)"><i data-lucide="check"></i>verified</span>
+    <span class="badge" style="background:var(--info-wash);color:var(--info)"><i data-lucide="zap"></i>claude code</span>
+    <span class="badge" style="background:var(--warning-wash);color:var(--warning)"><i data-lucide="flask-conical"></i>beta</span>
+    <span class="badge" style="background:var(--surface-2);color:var(--fg-muted);border:1px solid var(--stone-200)"><i data-lucide="scale"></i>MIT</span>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+id: transactional-repository-usage
+language: TypeScript
+severity: error
+message: Method calls a repository but lacks transaction management.
+note: |
+  Every use case method that calls a repository must use @Transactional or runInNewTransaction.
+  Add @Transactional on the line before the method declaration, or wrap logic in runInNewTransaction().
+  Private helper methods are excluded — they are called from already-transactional methods.
+files:
+  - "src/lib/**/application/**/*.ts"
+rule:
+  kind: method_definition
+  not:
+    any:
+      - follows:
+          kind: decorator
+          has:
+            kind: identifier
+            regex: "^Transactional$"
+      - has:
+          kind: accessibility_modifier
+      - has:
+          kind: call_expression
+          has:
+            kind: identifier
+            regex: "^runInNewTransaction$"
+          stopBy: end
+  has:
+    kind: member_expression
+    has:
+      kind: member_expression
+      has:
+        kind: property_identifier
+        regex: "[Rr]epository$"
+    stopBy: end

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-mono);padding:24px 30px;display:flex;gap:16px;align-items:flex-end}
+  .item{display:flex;flex-direction:column;align-items:center;gap:9px;flex:1}
+  .box{width:100%;height:74px;background:var(--surface);border:1.5px solid var(--border-strong)}
+  .lab{font-size:10.5px;color:var(--fg-muted);text-align:center}
+</style>
+</head>
+<body>
+  <div class="item"><div class="box" style="border-radius:var(--radius-xs)"></div><span class="lab">xs · 3</span></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-sm)"></div><span class="lab">sm · 5</span></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-md)"></div><span class="lab">md · 8<br>inputs</span></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-lg)"></div><span class="lab">lg · 12<br>cards</span></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-xl)"></div><span class="lab">xl · 16</span></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-2xl)"></div><span class="lab">2xl · 24</span></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-pill)"></div><span class="lab">pill<br>tags</span></div>
+</body>
+</html>

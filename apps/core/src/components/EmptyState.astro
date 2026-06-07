@@ -1,0 +1,19 @@
+---
+const { query } = Astro.props;
+---
+
+<div class="flex flex-col items-center justify-center py-16 text-center">
+  <div class="flex size-[52px] items-center justify-center rounded-lg bg-[var(--surface-2)]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--fg-faint)]">
+      <path d="M10.5 10.5 21 21" />
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  </div>
+  <p class="mt-3 font-display text-lg font-semibold text-[var(--fg)]">
+    No skills match that search
+  </p>
+  <p class="mt-1.5 max-w-[42ch] text-sm leading-relaxed text-[var(--fg-muted)]">
+    Nothing for <code class="rounded-xs border border-[var(--border)] bg-[var(--accent-wash)] px-1.5 py-px font-mono text-[var(--text-xs)] text-[var(--accent-text)]">{query}</code> yet. Try a broader term.
+  </p>
+</div>

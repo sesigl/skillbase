@@ -1,0 +1,18 @@
+id: no-client-query-in-use-case-tests
+language: TypeScript
+severity: error
+message: Direct database access via client.query() in non-repository test.
+note: |
+  Use case and application-level integration tests must not access the
+  database directly. Seed test data through use case classes and
+  repository interfaces, not raw SQL or pool/client.query().
+
+  Allowed exceptions: *Repository.test.ts, database-smoke.test.ts, Transactional.test.ts
+files:
+  - "tests/**/*.test.ts"
+ignores:
+  - "tests/**/*Repository.test.ts"
+  - "tests/**/database-smoke.test.ts"
+  - "tests/**/Transactional.test.ts"
+rule:
+  pattern: client.query($$$ARGS)

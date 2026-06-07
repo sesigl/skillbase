@@ -1,0 +1,26 @@
+id: no-repository-call-in-use-case-tests
+language: TypeScript
+severity: error
+message: Direct repository method call in use-case test — use only use case methods.
+note: |
+  Use case integration tests must interact with the system exclusively
+  through use case methods. Direct repository calls bypass the application
+  layer and couple tests to infrastructure.
+
+  Seeding: use a use case create/generate method.
+  Verification: use a use case query method.
+  Cleanup: use cleanDatabase() from testDatabase helpers.
+
+  Repository instances may only appear as constructor arguments when
+  wiring the use case under test.
+files:
+  - "tests/**/*UseCases*.test.ts"
+rule:
+  kind: call_expression
+  has:
+    kind: member_expression
+    has:
+      kind: identifier
+      regex: "[Rr]epository$"
+      field: object
+    stopBy: neighbor

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.cjs", "**/*.mjs", "**/*.json"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "noUnusedFunctionParameters": "error"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "error",
+        "noStaticOnlyClass": "error",
+        "useSimplifiedLogicExpression": "error",
+        "useLiteralKeys": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "error"
+      },
+      "style": {
+        "useImportType": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.test.ts", "**/*.test.js", "**/tests/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedFunctionParameters": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.astro", "**/*.css"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": [".opencode/skills/design-system/**"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["apps/core/migrations/**/*.js"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNodejsImportProtocol": "off"
+          },
+          "complexity": {
+            "useArrowFunction": "off"
+          },
+          "suspicious": {
+            "noShadowRestrictedNames": "off"
+          },
+          "correctness": {
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    }
+  ],
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5",
+      "semicolons": "always"
+    }
+  }
+}

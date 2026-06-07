@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);padding:24px 28px;display:flex;gap:14px}
+  .col{flex:1;display:flex;flex-direction:column;gap:10px}
+  .dot{display:flex;align-items:center;gap:10px}
+  .swatch{width:30px;height:30px;border-radius:var(--radius-sm)}
+  .meta{display:flex;flex-direction:column;gap:1px}
+  .nm{font-family:var(--font-display);font-weight:600;font-size:14px}
+  .vr{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-muted)}
+  .pill{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:5px 10px;border-radius:var(--radius-pill);width:max-content}
+</style>
+</head>
+<body>
+  <div class="col">
+    <div class="dot"><div class="swatch" style="background:var(--info)"></div><div class="meta"><span class="nm" style="color:var(--info)">Info</span><span class="vr">--info</span></div></div>
+    <span class="pill" style="background:var(--info-wash);color:var(--info)">SSR · server-side</span>
+    <div class="dot"><div class="swatch" style="background:var(--success)"></div><div class="meta"><span class="nm" style="color:var(--success)">Success</span><span class="vr">--success</span></div></div>
+    <span class="pill" style="background:var(--success-wash);color:var(--success)">verify passed</span>
+  </div>
+  <div class="col">
+    <div class="dot"><div class="swatch" style="background:var(--warning)"></div><div class="meta"><span class="nm" style="color:var(--warning)">Warning</span><span class="vr">--warning</span></div></div>
+    <span class="pill" style="background:var(--warning-wash);color:var(--warning)">migration pending</span>
+    <div class="dot"><div class="swatch" style="background:var(--danger)"></div><div class="meta"><span class="nm" style="color:var(--danger)">Danger</span><span class="vr">--danger</span></div></div>
+    <span class="pill" style="background:var(--danger-wash);color:var(--danger)">type error</span>
+  </div>
+</body>
+</html>

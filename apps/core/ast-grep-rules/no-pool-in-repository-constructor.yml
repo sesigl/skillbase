@@ -1,0 +1,25 @@
+id: no-pool-in-repository-constructor
+language: TypeScript
+severity: error
+message: Repository constructor accepts a Pool parameter — repositories must be stateless.
+note: |
+  Postgres repositories must use getTransactionClient() from TransactionContext.
+  They must NOT accept a Pool via constructor or store pool as a field.
+  Repositories must be stateless.
+files:
+  - "src/lib/**/Postgres*Repository.ts"
+rule:
+  kind: method_definition
+  all:
+    - has:
+        field: name
+        regex: "^constructor$"
+    - has:
+        kind: formal_parameters
+        has:
+          kind: type_annotation
+          has:
+            kind: type_identifier
+            regex: "^Pool$"
+          stopBy: end
+        stopBy: end

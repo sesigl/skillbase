@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);padding:24px 28px;display:flex;gap:12px}
+  .tile{flex:1;border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column;justify-content:space-between;height:120px;border:1px solid var(--stone-200)}
+  .lab{font-family:var(--font-mono);font-size:11px;letter-spacing:.04em}
+  .role{font-family:var(--font-display);font-weight:600;font-size:15px}
+</style>
+</head>
+<body>
+  <div class="tile" style="background:var(--paper)">
+    <span class="role" style="color:var(--ink)">Paper</span>
+    <span class="lab" style="color:var(--stone-600)">--bg · canvas</span>
+  </div>
+  <div class="tile" style="background:#fff">
+    <span class="role" style="color:var(--ink)">Surface</span>
+    <span class="lab" style="color:var(--stone-600)">--surface · cards</span>
+  </div>
+  <div class="tile" style="background:var(--paper-sunk)">
+    <span class="role" style="color:var(--ink)">Sunk</span>
+    <span class="lab" style="color:var(--stone-600)">--bg-sunk · wells</span>
+  </div>
+  <div class="tile" style="background:var(--ink);border-color:var(--ink)">
+    <span class="role" style="color:var(--stone-100)">Ink</span>
+    <span class="lab" style="color:var(--stone-400)">--fg · text/dark</span>
+  </div>
+  <div class="tile" style="background:var(--stone-950);border-color:var(--stone-950)">
+    <span class="role" style="color:var(--stone-100)">Code</span>
+    <span class="lab" style="color:var(--lime-300)">--code-bg · panels</span>
+  </div>
+</body>
+</html>

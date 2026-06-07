@@ -1,0 +1,46 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: skillbase
+          POSTGRES_PASSWORD: skillbase
+          POSTGRES_DB: skillbase_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 25.9.0
+          cache: pnpm
+
+      - run: pnpm install
+
+      - run: pnpm run verify
+        env:
+          DATABASE_URL: postgresql://skillbase:skillbase@localhost:5432/skillbase_test
+          PGSSLMODE: disable

@@ -1,0 +1,11 @@
+id: no-pool-query-in-repository
+language: TypeScript
+severity: error
+message: Repository calls pool.query() — use getTransactionClient().query() instead.
+note: |
+  Postgres repositories must use getTransactionClient() from TransactionContext.
+  They must NOT call pool.query() directly. Repositories must be stateless.
+files:
+  - "src/lib/**/Postgres*Repository.ts"
+rule:
+  pattern: pool.query($$$ARGS)

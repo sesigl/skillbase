@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);padding:26px 30px;display:flex;flex-direction:column;gap:14px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  label{font-size:12px;font-weight:500;color:var(--fg-muted)}
+  .input{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:11px 14px}
+  .input svg{width:17px;height:17px;color:var(--fg-faint)}
+  .input input{border:0;outline:0;background:transparent;font-family:var(--font-sans);font-size:14px;color:var(--ink);width:100%}
+  .input.focus{border-color:var(--lime-500);box-shadow:0 0 0 3px var(--ring)}
+  .input .kbd{font-family:var(--font-mono);font-size:11px;color:var(--fg-faint);border:1px solid var(--border);border-radius:var(--radius-xs);padding:2px 6px}
+  .help{font-size:11.5px;color:var(--fg-faint)}
+</style>
+</head>
+<body>
+  <div class="field">
+    <label>Search skills</label>
+    <div class="input focus"><i data-lucide="search"></i><input value="git commit" /><span class="kbd">↵</span></div>
+  </div>
+  <div class="field">
+    <label>Skill name</label>
+    <div class="input"><i data-lucide="box"></i><input placeholder="e.g. commit-helper" /></div>
+    <span class="help">Lowercase, hyphen-separated. Unique per author.</span>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
