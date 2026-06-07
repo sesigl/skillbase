@@ -1,0 +1,135 @@
+---
+import SkillDetailSidebar from './SkillDetailSidebar.astro';
+import type { SidebarField } from '@lib/catalog/application/classifySkillFields';
+import type { SkillOverview } from '@lib/catalog/presentation/buildSkillOverview';
+
+const { overview, fields = [] } = Astro.props as {
+  overview: SkillOverview;
+  fields: SidebarField[];
+};
+---
+
+<section class="space-y-6">
+  <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+    <article class="card relative overflow-hidden p-8">
+      <div class="absolute inset-x-0 top-0 h-px bg-[var(--accent)] opacity-80"></div>
+      <p class="font-mono text-2xs font-medium uppercase tracking-[var(--tracking-caps)] text-[var(--accent-text)]">
+        Overview
+      </p>
+      <h2 class="mt-3 font-display text-2xl font-semibold tracking-[var(--tracking-tight)] text-[var(--fg)]">
+        Operator brief
+      </h2>
+      <p class="mt-4 max-w-[58ch] text-md leading-relaxed text-[var(--fg-muted)]">
+        {overview.purpose}
+      </p>
+    </article>
+
+    <aside class="code-panel p-5">
+      <p class="font-mono text-2xs uppercase tracking-[var(--tracking-caps)] text-[var(--code-line)]">
+        Signals
+      </p>
+      <div class="mt-4 space-y-4">
+        {overview.signals.map((signal) => (
+          <div class="flex items-start justify-between gap-4 border-b border-[var(--code-border)] pb-3 last:border-0 last:pb-0">
+            <span class="font-mono text-2xs uppercase tracking-[var(--tracking-caps)] text-[var(--code-line)]">
+              {signal.label}
+            </span>
+            <span
+              class:list={[
+                'font-mono text-xs text-right',
+                signal.tone === 'accent' && 'text-[var(--lime-300)]',
+                signal.tone === 'warning' && 'text-[var(--warning)]',
+                signal.tone === 'muted' && 'text-[var(--code-fg)]',
+              ]}
+            >
+              {signal.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    </aside>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-3">
+    {overview.cards.map((card) => (
+      <article class="card p-5">
+        <p class="font-mono text-2xs uppercase tracking-[var(--tracking-caps)] text-[var(--fg-faint)]">
+          {card.eyebrow}
+        </p>
+        <h3 class="mt-2 font-display text-lg font-semibold tracking-[var(--tracking-snug)] text-[var(--fg)]">
+          {card.title}
+        </h3>
+        <ul class="mt-4 space-y-3">
+          {card.items.map((item) => (
+            <li class="flex gap-3 text-sm leading-relaxed text-[var(--fg-muted)]">
+              <span class="mt-[0.55rem] h-1.5 w-1.5 shrink-0 rounded-pill bg-[var(--accent)]"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <article class="card p-6">
+      <div class="flex items-baseline justify-between gap-4">
+        <h3 class="font-display text-lg font-semibold tracking-[var(--tracking-snug)] text-[var(--fg)]">
+          Content map
+        </h3>
+        <span class="font-mono text-2xs uppercase tracking-[var(--tracking-caps)] text-[var(--fg-faint)]">
+          Source outline
+        </span>
+      </div>
+      {overview.contentMap.length > 0 ? (
+        <ol class="mt-5 grid gap-2 sm:grid-cols-2">
+          {overview.contentMap.map((heading, index) => (
+            <li class="flex items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--bg-sunk)] px-3 py-2">
+              <span class="font-mono text-2xs text-[var(--accent-text)]">{String(index + 1).padStart(2, '0')}</span>
+              <span class="truncate text-sm text-[var(--fg-muted)]">{heading}</span>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="mt-5 text-sm leading-relaxed text-[var(--fg-muted)]">
+          No section headings detected. Open <code class="font-mono text-[var(--fg)]">SKILL.md</code> for the full source.
+        </p>
+      )}
+    </article>
+
+    <article class="card p-6">
+      <h3 class="font-display text-lg font-semibold tracking-[var(--tracking-snug)] text-[var(--fg)]">
+        Supporting files
+      </h3>
+      {overview.supportingFiles.length > 0 ? (
+        <ul class="mt-5 space-y-2">
+          {overview.supportingFiles.slice(0, 6).map((file) => (
+            <li class="truncate rounded-md border border-[var(--border)] bg-[var(--bg-sunk)] px-3 py-2 font-mono text-xs text-[var(--fg-muted)]" title={file}>
+              {file}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="mt-5 text-sm leading-relaxed text-[var(--fg-muted)]">
+          This skill only declares <code class="font-mono text-[var(--fg)]">SKILL.md</code>.
+        </p>
+      )}
+    </article>
+  </div>
+
+  {fields.length > 0 && (
+    <article class="card p-6">
+      <div class="flex items-baseline justify-between gap-4">
+        <h3 class="font-display text-lg font-semibold tracking-[var(--tracking-snug)] text-[var(--fg)]">
+          Manifest facts
+        </h3>
+        <span class="font-mono text-2xs uppercase tracking-[var(--tracking-caps)] text-[var(--fg-faint)]">
+          Non-empty frontmatter
+        </span>
+      </div>
+      <div class="mt-5">
+        <SkillDetailSidebar fields={fields} />
+      </div>
+    </article>
+  )}
+</section>

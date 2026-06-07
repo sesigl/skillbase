@@ -7,7 +7,12 @@ import type {
   RepositoryScanResult,
   ValidationError,
 } from '../../domain/repository-registry/IndexedRepository';
-import { findGitRoot, findSkillDirectories, detectRepositoryType } from '../../../shared/git-utils';
+import {
+  findGitRoot,
+  findSkillDirectories,
+  detectRepositoryType,
+  pathExists,
+} from '../../../shared/git-utils';
 import { parseFrontmatter } from './frontmatter';
 
 const TAG_TAXONOMY = [
@@ -27,6 +32,16 @@ const TAG_TAXONOMY = [
   'monitoring',
   'ci',
   'cd',
+];
+
+const CLAUDE_CODE_FIELDS = [
+  'context',
+  'agent',
+  'model',
+  'effort',
+  'paths',
+  'shell',
+  'disallowed-tools',
 ];
 
 const SKILL_MD_MAX_BYTES = 1_048_576;
@@ -53,6 +68,12 @@ export class FilesystemSkillRepository implements SkillRepository {
         skill.tags.some((t) => t.toLowerCase() === q) ||
         skill.providers.some((p) => p.toLowerCase() === q)
     );
+  }
+
+  async findByRepositoryAndName(repoPath: string, name: string): Promise<Skill | null> {
+    if (!pathExists(repoPath)) return null;
+    const result = this.scanRepository(repoPath);
+    return result.skills.find((s) => s.name === name) ?? null;
   }
 
   scanRepository(repoPath: string): RepositoryScanResult {
@@ -372,7 +393,12 @@ function deriveProviders(frontmatter: Record<string, unknown>): string[] {
       .filter(Boolean);
   }
 
-  return [];
+  const hasClaudeField = CLAUDE_CODE_FIELDS.some((field) => {
+    const hyphenated = field.replace(/([A-Z])/g, '-$1').toLowerCase();
+    return frontmatter[hyphenated] !== undefined || frontmatter[field] !== undefined;
+  });
+
+  return hasClaudeField ? ['claude-code'] : ['unknown'];
 }
 
 function extractAssets(body: string): string[] {

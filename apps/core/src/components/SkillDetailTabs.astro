@@ -1,0 +1,40 @@
+---
+const { labels = ['Overview', 'SKILL.md'], tabIds = ['overview', 'source'] } = Astro.props;
+---
+
+<div data-skill-detail-tabs class="space-y-6">
+  <div class="inline-flex rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1" role="tablist" aria-label="Skill content">
+    {labels.map((label: string, index: number) => (
+      <button
+        role="tab"
+        id={`tab-${tabIds[index]}`}
+        aria-selected={index === 0 ? 'true' : 'false'}
+        aria-controls={`panel-${tabIds[index]}`}
+        tabindex={index === 0 ? '0' : '-1'}
+        class="rounded-lg border px-4 py-2 font-mono text-sm transition-colors ease-[var(--ease-out)] duration-[var(--dur-fast)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ring)]"
+        class:list={[
+          index === 0
+            ? 'border-[var(--border)] bg-[var(--surface)] text-[var(--accent-text)] shadow-sm'
+            : 'border-transparent text-[var(--fg-muted)] hover:text-[var(--fg)]',
+        ]}
+        data-tab={tabIds[index]}
+      >
+        {label}
+      </button>
+    ))}
+  </div>
+  <div>
+    <div role="tabpanel" id={`panel-${tabIds[0]}`} aria-labelledby={`tab-${tabIds[0]}`}>
+      <slot name="overview" />
+    </div>
+    <div role="tabpanel" id={`panel-${tabIds[1]}`} aria-labelledby={`tab-${tabIds[1]}`} hidden>
+      <slot name="source" />
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initializeSkillDetailTabs } from '../lib/catalog/presentation/skillDetailTabs';
+
+  initializeSkillDetailTabs();
+</script>

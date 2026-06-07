@@ -1,1 +1,3 @@
-{ "feature_directory": "specs/002-git-native-skill-registry" }
+{
+  "feature_directory": "specs/003-skill-detail-page"
+}

@@ -74,4 +74,12 @@ export class CatalogUseCases {
   async clearAll(): Promise<void> {
     await this.repositoryRegistry.clearAll();
   }
+
+  @Transactional
+  async getSkill(repoPath: string, name: string): Promise<Skill | null> {
+    const absPath = resolve(repoPath);
+    const registered = await this.repositoryRegistry.findByPath(absPath);
+    if (!registered) return null;
+    return this.skillRepository.findByRepositoryAndName(absPath, name);
+  }
 }

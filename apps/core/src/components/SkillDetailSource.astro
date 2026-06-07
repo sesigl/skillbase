@@ -1,0 +1,19 @@
+---
+import { highlightSource } from '@lib/catalog/application/renderSource';
+
+const { rawSource = '' } = Astro.props;
+const highlighted = highlightSource(rawSource);
+---
+
+<div class="code-panel overflow-hidden">
+  <div class="border-b border-[var(--code-border)] px-5 py-3 font-mono text-2xs uppercase tracking-[var(--tracking-caps)] text-[var(--code-line)]">
+    Raw SKILL.md
+  </div>
+  <pre class="overflow-x-auto p-6 font-mono text-xs leading-relaxed whitespace-pre-wrap break-all"><Fragment set:html={highlighted} /></pre>
+</div>
+
+<style>
+  .code-panel :global(.yaml-key) {
+    color: var(--accent-text);
+  }
+</style>

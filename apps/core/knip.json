@@ -12,7 +12,8 @@
     "lucide",
     "autoprefixer",
     "testcontainers",
-    "@ast-grep/cli"
+    "@ast-grep/cli",
+    "@types/dompurify"
   ],
   "ignoreExportsUsedInFile": true,
   "rules": {

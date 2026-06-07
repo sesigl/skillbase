@@ -3,10 +3,8 @@ set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 DEFAULT_BASE="main"
-BASE_BRANCH="${1:-$DEFAULT_BASE}"
-WORKTREE_NAME="${2:-}"
 
-if [[ -z "$WORKTREE_NAME" ]]; then
+if [[ $# -eq 0 ]]; then
   echo "Usage: $0 [base-branch] <worktree-name>"
   echo ""
   echo "  base-branch   Branch to base the worktree on (default: main)"
@@ -19,8 +17,16 @@ if [[ -z "$WORKTREE_NAME" ]]; then
 fi
 
 if [[ $# -eq 1 ]]; then
-  WORKTREE_NAME="$1"
   BASE_BRANCH="$DEFAULT_BASE"
+  WORKTREE_NAME="$1"
+else
+  BASE_BRANCH="$1"
+  WORKTREE_NAME="$2"
+fi
+
+if [[ -z "$WORKTREE_NAME" ]]; then
+  echo "Usage: $0 [base-branch] <worktree-name>"
+  exit 1
 fi
 
 WORKTREE_DIR="${REPO_ROOT}-${WORKTREE_NAME}"

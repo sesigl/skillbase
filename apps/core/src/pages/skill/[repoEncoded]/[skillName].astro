@@ -1,0 +1,76 @@
+---
+import { readFileSync } from 'node:fs';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SkillDetailHeader from '../../../components/SkillDetailHeader.astro';
+import SkillDetailOverview from '../../../components/SkillDetailOverview.astro';
+import SkillDetailTabs from '../../../components/SkillDetailTabs.astro';
+import SkillDetailSource from '../../../components/SkillDetailSource.astro';
+import SkillNotFound from '../../../components/SkillNotFound.astro';
+import RepositoryUnavailable from '../../../components/RepositoryUnavailable.astro';
+import { fromBase64Url } from '../../../lib/catalog/infrastructure/adapters/url-encoding';
+import type { IndexedRepository } from '../../../lib/catalog/domain/repository-registry/IndexedRepository';
+import {
+  type SkillDetailErrorState,
+  resolveSkillDetailErrorState,
+} from '../../../lib/catalog/presentation/resolveSkillDetailErrorState';
+import { buildSkillOverview } from '../../../lib/catalog/presentation/buildSkillOverview';
+
+const { repoEncoded, skillName } = Astro.params;
+
+const repoPath = fromBase64Url(repoEncoded ?? '');
+
+const { createCatalogUseCases } = await import('@lib/catalog/infrastructure/di');
+const { classifySkillFields } = await import('@lib/catalog/application/classifySkillFields');
+const catalog = createCatalogUseCases();
+
+const skill = await catalog.getSkill(repoPath, skillName ?? '');
+
+let errorState: SkillDetailErrorState | null = null;
+let rawSource = '';
+let fields: ReturnType<typeof classifySkillFields> | null = null;
+let overview: ReturnType<typeof buildSkillOverview> | null = null;
+
+if (skill) {
+  fields = classifySkillFields(skill);
+  overview = buildSkillOverview(skill);
+  rawSource = readFileSync(skill.sourcePath, 'utf-8');
+} else {
+  const repos: IndexedRepository[] = await catalog.listRepositories();
+  const registeredRepo = repos.find((r) => r.path === repoPath);
+
+  errorState = resolveSkillDetailErrorState(registeredRepo);
+}
+---
+
+<BaseLayout>
+  <main class="container-content py-16">
+    {
+      skill && fields && overview ? (
+        <div>
+          <SkillDetailHeader
+            name={skill.name}
+            description={overview.summary}
+            sourceRepository={skill.sourceRepository}
+            isUserInvocable={skill.userInvocable}
+            isModelInvocationDisabled={skill.disableModelInvocation}
+          />
+
+          <div class="mt-10">
+            <SkillDetailTabs>
+              <div slot="overview">
+                <SkillDetailOverview overview={overview} fields={fields.sidebar} />
+              </div>
+              <div slot="source">
+                <SkillDetailSource rawSource={rawSource} />
+              </div>
+            </SkillDetailTabs>
+          </div>
+        </div>
+      ) : errorState === 'repo-unavailable' ? (
+        <RepositoryUnavailable repoPath={repoPath} />
+      ) : (
+        <SkillNotFound />
+      )
+    }
+  </main>
+</BaseLayout>

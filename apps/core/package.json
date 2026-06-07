@@ -25,6 +25,7 @@
     "check:env-imports": "tsx scripts/checks/env-imports.ts",
     "check:use-case-tests": "tsx scripts/checks/use-case-tests.ts",
     "check:no-inline-imports": "tsx scripts/checks/no-inline-imports.ts",
+    "check:application-agents": "tsx scripts/checks/application-agents.ts",
     "verify": "tsx scripts/verify.ts",
     "review": "TASK_SET=review tsx scripts/verify.ts",
     "qa": "TASK_SET=qa tsx scripts/verify.ts"
@@ -39,7 +40,10 @@
     "db-migrate-pg": "1.5.2",
     "dotenv": "17.4.2",
     "dotenv-cli": "11.0.0",
+    "highlight.js": "11.11.1",
+    "isomorphic-dompurify": "3.16.0",
     "lucide": "1.17.0",
+    "marked": "18.0.5",
     "pg": "8.21.0",
     "yaml": "2.9.0",
     "zod": "4.4.3"
@@ -49,6 +53,7 @@
     "@astrojs/check": "0.9.9",
     "@ls-lint/ls-lint": "2.3.1",
     "@testcontainers/postgresql": "12.0.1",
+    "@types/dompurify": "3.2.0",
     "@types/node": "25.9.1",
     "@types/pg": "8.20.0",
     "autoprefixer": "10.5.0",

@@ -61,7 +61,7 @@ Read the diff. Each section below applies only if its trigger matches the change
 
 ### If Astro page or component files change
 
-- No function definitions in page frontmatter. Move logic to shared utilities or use cases.
+- No function definitions in page frontmatter. Move logic to shared testable utilities or use cases.
 - Pages must NOT directly instantiate repositories. Use DI via `createCatalogUseCases()`.
 - Check `check:env-imports`: no `import.meta.env.*` usage except `PROD`, `DEV`, `SSR` in `.ts`/`.tsx` files. Astro pages use `import.meta.env` as standard API and are excluded.
 - Component files follow PascalCase for `.astro` components.

@@ -158,7 +158,7 @@ metadata:
       expect(result.skills[0].tags).toContain('deployment');
     });
 
-    it('ignores Claude Code fields in frontmatter — only metadata.providers is used', () => {
+    it('infers claude-code provider from Claude Code fields', () => {
       const tmpDir = trackDir(createTempGitRepo());
       writeSkillFile(
         tmpDir,
@@ -168,10 +168,10 @@ metadata:
 
       const result = repo.scanRepository(tmpDir);
 
-      expect(result.skills[0].providers).toEqual([]);
+      expect(result.skills[0].providers).toEqual(['claude-code']);
     });
 
-    it('returns empty providers when no metadata.providers set', () => {
+    it('returns unknown provider when no Claude Code fields present', () => {
       const tmpDir = trackDir(createTempGitRepo());
       writeSkillFile(
         tmpDir,
@@ -181,7 +181,7 @@ metadata:
 
       const result = repo.scanRepository(tmpDir);
 
-      expect(result.skills[0].providers).toEqual([]);
+      expect(result.skills[0].providers).toEqual(['unknown']);
     });
 
     it('ignores directory without SKILL.md and reports warning', () => {
@@ -316,6 +316,26 @@ metadata:
       expect(result.validationErrors.some((e) => e.message.includes('no .claude/skills/'))).toBe(
         true
       );
+    });
+  });
+
+  describe('findByRepositoryAndName', () => {
+    it('returns a valid skill from a repository with other invalid skills', async () => {
+      const tmpDir = trackDir(createTempGitRepo());
+      writeSkillFile(
+        tmpDir,
+        'valid-skill',
+        skillFrontmatter('name: valid-skill\ndescription: Valid skill')
+      );
+      writeSkillFile(
+        tmpDir,
+        'broken-skill',
+        skillFrontmatter('name: BROKEN\ndescription: Invalid skill')
+      );
+
+      const skill = await repo.findByRepositoryAndName(tmpDir, 'valid-skill');
+
+      expect(skill?.name).toBe('valid-skill');
     });
   });
 

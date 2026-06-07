@@ -1,0 +1,78 @@
+---
+import type { SidebarField } from '@lib/catalog/application/classifySkillFields';
+
+const { fields = [] } = Astro.props;
+---
+
+<aside class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+  {
+    fields.map((field: SidebarField) => {
+      switch (field.kind) {
+        case 'scalar':
+          return (
+            <div class="rounded-md border border-[var(--border)] bg-[var(--bg-sunk)] p-4">
+              <span class="font-mono text-2xs text-[var(--fg-faint)] uppercase tracking-[var(--tracking-caps)]">{field.label}</span>
+              <span class="mt-2 block font-mono text-sm text-[var(--fg)] break-words">{String(field.value)}</span>
+            </div>
+          );
+        case 'list': {
+          const items = field.value as string[];
+          return (
+            <div class="rounded-md border border-[var(--border)] bg-[var(--bg-sunk)] p-4">
+              <span class="font-mono text-2xs text-[var(--fg-faint)] uppercase tracking-[var(--tracking-caps)]">{field.label}</span>
+              {items.length <= 3 ? (
+                <span class="mt-2 block font-mono text-sm text-[var(--fg)] break-words">{items.join(', ')}</span>
+              ) : (
+                <details class="mt-2 font-mono text-sm text-[var(--fg)]">
+                  <summary class="cursor-pointer hover:text-[var(--accent-text)]">{items.length} items</summary>
+                  <ul class="mt-2 ml-4 list-disc space-y-1">
+                    {items.map((item: string) => <li>{item}</li>)}
+                  </ul>
+                </details>
+              )}
+            </div>
+          );
+        }
+        case 'pills': {
+          const pills = field.value as string[];
+          return (
+            <div class="rounded-md border border-[var(--border)] bg-[var(--bg-sunk)] p-4">
+              <span class="font-mono text-2xs text-[var(--fg-faint)] uppercase tracking-[var(--tracking-caps)]">{field.label}</span>
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                {pills.map((pill: string) => (
+                  <span class="tag">{pill}</span>
+                ))}
+              </div>
+            </div>
+          );
+        }
+        case 'entries': {
+          const entries = field.value as string[];
+          return (
+            <div class="rounded-md border border-[var(--border)] bg-[var(--bg-sunk)] p-4">
+              <span class="font-mono text-2xs text-[var(--fg-faint)] uppercase tracking-[var(--tracking-caps)]">{field.label}</span>
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                {entries.map((entry: string) => (
+                  <span class="tag rounded-md bg-[var(--surface-2)] text-[var(--fg-faint)]">{entry}</span>
+                ))}
+              </div>
+            </div>
+          );
+        }
+        case 'object': {
+          return (
+            <div class="rounded-md border border-[var(--border)] bg-[var(--bg-sunk)] p-4 sm:col-span-2 xl:col-span-3">
+              <span class="font-mono text-2xs text-[var(--fg-faint)] uppercase tracking-[var(--tracking-caps)]">{field.label}</span>
+              <details class="mt-2 font-mono text-sm text-[var(--fg)]">
+                <summary class="cursor-pointer hover:text-[var(--accent-text)]">View</summary>
+                <pre class="mt-2 text-xs text-[var(--fg-muted)]">{JSON.stringify(field.value, null, 2)}</pre>
+              </details>
+            </div>
+          );
+        }
+        default:
+          return null;
+      }
+    })
+  }
+</aside>

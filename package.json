@@ -8,6 +8,7 @@
   "scripts": {
     "prepare": "husky",
     "verify": "node --import tsx scripts/verify.ts",
+    "qa": "pnpm --filter @skillbase/core qa && pnpm --filter @skillbase/landing-page qa",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "check": "biome check ."

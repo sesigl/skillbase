@@ -308,4 +308,47 @@ describe('CatalogUseCases', () => {
       expect(repos).toHaveLength(0);
     });
   });
+
+  describe('getSkill', () => {
+    it('returns skill by repository path and name', async () => {
+      const tmpDir = trackTempDir(createTempGitRepo());
+      writeSkillMarkdown(tmpDir, 'deploy-tool', 'name: deploy-tool\ndescription: Deploy utility');
+
+      await useCases.indexRepository(tmpDir);
+      const skill = await useCases.getSkill(tmpDir, 'deploy-tool');
+
+      expect(skill).not.toBeNull();
+      expect(skill?.name).toBe('deploy-tool');
+      expect(skill?.description).toBe('Deploy utility');
+      expect(skill?.sourceRepository).toBe(tmpDir);
+    });
+
+    it('returns null for a repository path that is not indexed', async () => {
+      const skill = await useCases.getSkill('/tmp/nonexistent-repo-xyz', 'some-skill');
+
+      expect(skill).toBeNull();
+    });
+
+    it('returns null when the repo exists but the skill name is not found', async () => {
+      const tmpDir = trackTempDir(createTempGitRepo());
+      writeSkillMarkdown(tmpDir, 'existing-skill', 'name: existing-skill\ndescription: Exists');
+
+      await useCases.indexRepository(tmpDir);
+      const skill = await useCases.getSkill(tmpDir, 'nonexistent-skill');
+
+      expect(skill).toBeNull();
+    });
+
+    it('returns a valid skill when another skill in the indexed repository becomes invalid', async () => {
+      const tmpDir = trackTempDir(createTempGitRepo());
+      writeSkillMarkdown(tmpDir, 'valid-skill', 'name: valid-skill\ndescription: Valid skill');
+
+      await useCases.indexRepository(tmpDir);
+      writeSkillMarkdown(tmpDir, 'broken-skill', 'name: BROKEN\ndescription: Invalid skill');
+
+      const skill = await useCases.getSkill(tmpDir, 'valid-skill');
+
+      expect(skill?.name).toBe('valid-skill');
+    });
+  });
 });

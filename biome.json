@@ -62,6 +62,15 @@
       }
     },
     {
+      "includes": ["specs/**"],
+      "formatter": {
+        "enabled": false
+      },
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
       "includes": ["apps/core/migrations/**/*.js"],
       "linter": {
         "rules": {

@@ -72,29 +72,13 @@ tail -20 apps/landing-page/dev-server.log
 
 ---
 
-## Phase 1: Automated Tests
+## Phase 1: Manual Testing (Recursive)
 
-Run all tests to catch regressions:
-
-```bash
-pnpm run qa
-```
-
-If any tests fail:
-1. Read the failure output carefully.
-2. Determine if the failure is a real regression or a test that needs updating.
-3. If regression, proceed to Phase 3 (TDD Fix Protocol).
-4. If test update needed, fix the test and re-run.
-
-> **CRITICAL RULE: Every feature MUST be verified through the running app in the browser, even if it is a "backend-only" change.** Automated tests are not a substitute for manual QA. You must exercise the feature through the UI and observe actual behavior.
-
----
-
-## Phase 2: Manual Testing (Recursive)
+First, check off every feature in the current `tasks.md` list with a full manual test. For each feature, create test cases that cover the core user journey and edge cases. Document any issues in `issues.md` with clear reproduction steps and severity.
 
 If *any* issue is found and fixed, restart testing of **all** features to catch regressions.
 
-### For each feature/use case:
+### For each feature/use case test:
 
 1. **In-App Functional Verification** — navigate to the relevant page and interact:
    - Core app (`http://localhost:4321`): test search (try "git", "frontend", "zzz"), verify results render correctly, verify empty state shows appropriate message.

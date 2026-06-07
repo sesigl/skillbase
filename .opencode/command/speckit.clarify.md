@@ -88,6 +88,8 @@ After each accepted answer:
 
 **Offer ADRs sparingly.** Only when a decision is (1) hard to reverse, (2) surprising without context, AND (3) the result of a real trade-off. Place in `docs/adr/` with sequential numbering.
 
+**Offer Glossary Updates.** When a term is used that conflicts with the glossary, or when a new domain concept is clarified, update `CONTEXT.md` immediately with the new definition. Be opinionated — pick the best term and list alternatives under `_Avoid_:`. Only include project-specific domain terms.
+
 ### Stop Conditions
 
 - User signals completion: "done", "good", "no more", "proceed"

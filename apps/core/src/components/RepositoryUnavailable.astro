@@ -1,0 +1,21 @@
+---
+const { repoPath } = Astro.props;
+---
+
+<div class="flex flex-col items-center justify-center py-20">
+  <p class="font-mono text-sm text-[var(--fg-muted)] max-w-[var(--maxw-prose)] text-center">
+    The repository containing this skill is no longer available at <span class="text-[var(--accent-text)]">{repoPath}</span>.
+  </p>
+  <div class="mt-6 flex items-center gap-4">
+    <form method="POST" action="/">
+      <input type="hidden" name="_action" value="remove" />
+      <input type="hidden" name="path" value={repoPath} />
+      <button type="submit" class="btn-secondary cursor-pointer">
+        Remove from index
+      </button>
+    </form>
+    <a href="/" class="btn-secondary cursor-pointer">
+      Go to browse
+    </a>
+  </div>
+</div>

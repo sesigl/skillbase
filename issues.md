@@ -90,3 +90,58 @@ All checks passed.
 - `PostgresRepositoryRegistry.test.ts` — 10 tests
 - `skill.test.ts` — 16 tests (Schema validation)
 - `landing-page/pages/index.test.ts` — 1 test (render check)
+
+## ISSUE #7: Root QA script is missing
+
+- **Severity**: ISSUE
+- **Status**: RESOLVED
+- **Use Case**: Automated QA gate
+- **Expected**: `pnpm run qa` executes the repository QA test set.
+- **Actual**: `pnpm run qa` fails before tests run because the root `package.json` has no `qa` script.
+- **Error Log snippet**: `[ERR_PNPM_NO_SCRIPT] Missing script: qa`
+- **Regression check**: `pnpm run qa`
+- **Fix**: Added a root `qa` script that runs the core and landing-page QA scripts.
+
+## ISSUE #8: SKILL.md tab does not switch from Overview in the browser
+
+- **Severity**: ISSUE
+- **Status**: RESOLVED
+- **Use Case**: US3 — View Raw `SKILL.md` Source
+- **Expected**: Clicking the `SKILL.md` tab switches `aria-selected` to `SKILL.md`, hides Overview, and shows the raw source panel.
+- **Actual**: Clicking the `SKILL.md` tab reports success, but `Overview` remains selected and the Overview panel remains visible.
+- **Error Log snippet**: Core server log shows `200` for the detail route and no server error. Browser error check returned `✗` without a readable message.
+- **Regression test**: `tests/lib/catalog/presentation/skillDetailTabs.test.ts`
+- **Fix**: Replaced the unreliable inline `document.currentScript` lookup with a tested `initializeSkillDetailTabs()` initializer bound to `data-skill-detail-tabs`, covering click and ArrowRight tab switching.
+
+## ISSUE #9: Missing skill in a valid indexed repo renders repository-unavailable
+
+- **Severity**: ISSUE
+- **Status**: RESOLVED
+- **Use Case**: US1 — Skill detail error states
+- **Expected**: A missing skill under a valid indexed repository renders `This skill does not exist or has been removed`. A previously indexed repository that is missing on disk renders `The repository containing this skill is no longer available...`.
+- **Actual**: Missing skill URL `http://localhost:4321/skill/L1VzZXJzL3NlYmFzdGlhbi5zaWdsL1dvcmtzcGFjZS9jbGF1ZGUtY29kZS1wZXJzb25hbC1wbHVnaW4/no-such-skill` renders repository-unavailable even though the repository is listed as `valid` and existing skill URLs load. An arbitrary unregistered repo URL correctly renders skill-not-found.
+- **Error Log snippet**: Core server log shows `200` for the missing-skill route and no server error.
+- **Regression test**: `tests/lib/catalog/presentation/resolveSkillDetailErrorState.test.ts`
+- **Fix**: Added `resolveSkillDetailErrorState()` so only an indexed repository with `lastStatus: missing` renders the repository-unavailable state; valid indexed repos with missing skills render skill-not-found.
+
+## ISSUE #10: Skill detail Overview duplicates the full document and is hard to scan
+
+- **Severity**: ISSUE
+- **Status**: RESOLVED
+- **Use Case**: US2 — View rendered skill content with frontmatter
+- **Expected**: The Overview tab helps users quickly decide what the skill is for, how it is invoked, what constraints apply, and where to inspect details.
+- **Actual**: The Overview tab renders the full markdown body, duplicating the `SKILL.md` tab and creating a dense, hard-to-read page.
+- **Error Log snippet**: No runtime error. This is a UX defect observed during manual QA.
+- **Regression test**: `tests/lib/catalog/presentation/buildSkillOverview.test.ts`
+- **Fix**: Replaced the full-markdown Overview with a scan-first operator brief: concise summary, runtime signals, invocation contract, operating bounds, catalog signal, content map, supporting files, and manifest facts. The detailed raw content remains in the `SKILL.md` tab.
+
+## ISSUE #11: Raw SKILL.md panel adds indentation before source content
+
+- **Severity**: ISSUE
+- **Status**: RESOLVED
+- **Use Case**: US3 — View Raw `SKILL.md` Source
+- **Expected**: The raw source panel preserves the original `SKILL.md` content without adding leading whitespace before the first byte.
+- **Actual**: The source tab renders spaces before the opening `---` frontmatter delimiter.
+- **Error Log snippet**: Browser snapshot shows raw source beginning with `    ---`.
+- **Regression test**: `tests/pages/skill-detail-source.test.ts`
+- **Fix**: Moved the raw source HTML injection directly onto the `<pre>` boundary so Astro template indentation is not emitted before the source content.
