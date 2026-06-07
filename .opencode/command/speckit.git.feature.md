@@ -1,13 +1,12 @@
 ---
-description: Create a feature branch with sequential or timestamp numbering
+description: Create a git worktree for a new feature with sequential or timestamp numbering
 ---
-
 
 <!-- Extension: git -->
 <!-- Config: .specify/extensions/git/ -->
-# Create Feature Branch
+# Create Feature Worktree
 
-Create and switch to a new git feature branch for the given specification. This command handles **branch creation only** — the spec directory and files are created by the core `/speckit.specify` workflow.
+Create a new git worktree (branch + isolated directory) for the given specification. This command handles **worktree creation only** — the spec directory and files are created by the core `/speckit.specify` workflow.
 
 ## User Input
 
@@ -19,52 +18,72 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Environment Variable Override
 
-If the user explicitly provided `GIT_BRANCH_NAME` (e.g., via environment variable, argument, or in their request), pass it through to the script by setting the `GIT_BRANCH_NAME` environment variable before invoking the script. When `GIT_BRANCH_NAME` is set:
-- The script uses the exact value as the branch name, bypassing all prefix/suffix generation
-- `--short-name`, `--number`, and `--timestamp` flags are ignored
+If the user explicitly provided `GIT_BRANCH_NAME` (e.g., via environment variable, argument, or in their request), use it as the worktree/branch name, bypassing all prefix/suffix generation. When `GIT_BRANCH_NAME` is set:
+
+- Use the exact value as `BRANCH_NAME`
 - `FEATURE_NUM` is extracted from the name if it starts with a numeric prefix, otherwise set to the full branch name
 
 ## Prerequisites
 
-- Verify Git is available by running `git rev-parse --is-inside-work-tree 2>/dev/null`
-- If Git is not available, warn the user and skip branch creation
+Run `git rev-parse --is-inside-work-tree 2>/dev/null`. If it fails, warn the user and skip worktree creation.
 
 ## Branch Numbering Mode
 
-Determine the branch numbering strategy by checking configuration in this order:
+Determine numbering strategy:
 
 1. Check `.specify/extensions/git/git-config.yml` for `branch_numbering` value
-2. Check `.specify/init-options.json` for `branch_numbering` value (backward compatibility)
-3. Default to `sequential` if neither exists
+2. Default to `sequential` if not found
 
 ## Execution
 
-Generate a concise short name (2-4 words) for the branch:
-- Analyze the feature description and extract the most meaningful keywords
+### 1. Generate short name
+
+Generate a concise short name (2-4 words) from the feature description:
 - Use action-noun format when possible (e.g., "add-user-auth", "fix-payment-bug")
 - Preserve technical terms and acronyms (OAuth2, API, JWT, etc.)
+- Lowercase, hyphen-separated
 
-Run the appropriate script based on your platform:
+### 2. Determine full branch name
 
-- **Bash**: `.specify/extensions/git/scripts/bash/create-new-feature.sh --json --short-name "<short-name>" "<feature description>"`
-- **Bash (timestamp)**: `.specify/extensions/git/scripts/bash/create-new-feature.sh --json --timestamp --short-name "<short-name>" "<feature description>"`
-- **PowerShell**: `.specify/extensions/git/scripts/powershell/create-new-feature.ps1 -Json -ShortName "<short-name>" "<feature description>"`
-- **PowerShell (timestamp)**: `.specify/extensions/git/scripts/powershell/create-new-feature.ps1 -Json -Timestamp -ShortName "<short-name>" "<feature description>"`
+**If `GIT_BRANCH_NAME` is set:**
+- `BRANCH_NAME` = the provided value
+- Extract `FEATURE_NUM` from it (first numeric segment before `-`, or the full name if no numeric prefix)
 
-**IMPORTANT**:
-- Do NOT pass `--number` — the script determines the correct next number automatically
-- Always include the JSON flag (`--json` for Bash, `-Json` for PowerShell) so the output can be parsed reliably
-- You must only ever run this script once per feature
-- The JSON output will contain `BRANCH_NAME` and `FEATURE_NUM`
+**Otherwise:**
+
+| Mode | How to determine `FEATURE_NUM` |
+|------|-------------------------------|
+| `sequential` | Run `ls specs/ 2>/dev/null \| grep -E '^[0-9]{3,}-' \| grep -vE '^[0-9]{8}-[0-9]{6}-' \| sed 's/-.*//' \| sort -n \| tail -1`. If empty, use `0`. Then `FEATURE_NUM` = `$(printf "%03d" $((<highest> + 1)))` |
+| `timestamp` | Run `date +%Y%m%d-%H%M%S` |
+
+`BRANCH_NAME` = `FEATURE_NUM`-`<short-name>`
+
+### 3. Create the worktree
+
+```bash
+./scripts/create-worktree.sh <BRANCH_NAME>
+```
+
+The script:
+- Creates a git worktree branched off `main` at `$REPO_ROOT-<BRANCH_NAME>`
+- Copies `apps/core/.env` from the main tree
+- Runs `pnpm install` in the worktree
+
+### 4. Output
+
+Emit JSON with these keys so downstream commands can reference the branch:
+
+```json
+{"BRANCH_NAME": "<name>", "FEATURE_NUM": "<num>", "WORKTREE_DIR": "<absolute path to worktree>"}
+```
+
+After creation, tell the user:
+- The worktree directory path
+- To open the worktree in their editor/terminal
+- To merge back with `./scripts/merge-worktree.sh <BRANCH_NAME>` when done
 
 ## Graceful Degradation
 
 If Git is not installed or the current directory is not a Git repository:
-- Branch creation is skipped with a warning: `[specify] Warning: Git repository not detected; skipped branch creation`
-- The script still outputs `BRANCH_NAME` and `FEATURE_NUM` so the caller can reference them
-
-## Output
-
-The script outputs JSON with:
-- `BRANCH_NAME`: The branch name (e.g., `003-user-auth` or `20260319-143022-user-auth`)
-- `FEATURE_NUM`: The numeric or timestamp prefix used
+- Worktree creation is skipped with a warning: `[specify] Warning: Git repository not detected; skipped worktree creation`
+- Still output `BRANCH_NAME` and `FEATURE_NUM` so downstream commands can reference them

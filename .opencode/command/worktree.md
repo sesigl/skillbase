@@ -40,6 +40,10 @@ cd <worktree-dir> && pnpm --filter @skillbase/core dev
 ./scripts/merge-worktree.sh <branch-name>
 ```
 
+## Speckit Integration
+
+The `/speckit.specify` workflow automatically creates a worktree via its `before_specify` hook (which calls `/speckit.git.feature`). The worktree is branched off `main` with sequential or timestamp numbering. Use this manual `/worktree` command when you need a worktree outside the speckit flow.
+
 ## Example
 
 ```
