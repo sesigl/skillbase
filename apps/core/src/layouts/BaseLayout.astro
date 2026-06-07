@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Nav from '../components/Nav.astro';
 ---
 
 <!doctype html>
@@ -11,6 +12,7 @@ import '../styles/global.css';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="bg-[var(--bg)] text-[var(--fg)] font-sans antialiased" data-theme="dark">
+    <Nav />
     <slot />
   </body>
 </html>

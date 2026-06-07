@@ -28,3 +28,11 @@ export async function runInNewTransaction<T>(fn: () => Promise<T>): Promise<T> {
     }
   }
 }
+
+export function getTransactionClient(): PoolClient {
+  const client = transactionStorage.getStore();
+  if (!client) {
+    throw new Error('No active transaction. Use @Transactional or runInNewTransaction().');
+  }
+  return client;
+}

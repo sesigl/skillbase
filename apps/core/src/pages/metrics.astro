@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TelemetrySetup from '../components/TelemetrySetup.astro';
+import { createStatisticsUseCases } from '../lib/statistics/infrastructure/di';
+
+const useCases = createStatisticsUseCases();
+const summary = await useCases.getUsageSummary();
+const hasData = summary.totalInvocations > 0;
+const endpointUrl = `${Astro.url.protocol}//${Astro.url.host}/api/telemetry/v1/logs`;
+---
+
+<BaseLayout>
+  <main class="max-w-[var(--maxw-wide)] mx-auto px-6 py-12">
+    <h1 class="t-display mb-2">Metrics</h1>
+    <p class="t-lead mb-10">Skill usage across all indexed repositories</p>
+
+    <div class="grid grid-cols-1 gap-4 mb-12 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="card p-5">
+        <p class="t-meta mb-1">Invocations</p>
+        <p class="font-mono text-2xl font-bold text-[var(--fg)]">{summary.totalInvocations}</p>
+      </div>
+      <div class="card p-5">
+        <p class="t-meta mb-1">Skills</p>
+        <p class="font-mono text-2xl font-bold text-[var(--fg)]">{summary.distinctSkills}</p>
+      </div>
+      <div class="card p-5">
+        <p class="t-meta mb-1">Native loads</p>
+        <p class="font-mono text-2xl font-bold text-[var(--success)]">{summary.nativeInvocations}</p>
+      </div>
+      <div class="card p-5">
+        <p class="t-meta mb-1">File reads</p>
+        <p class="font-mono text-2xl font-bold text-[var(--info)]">{summary.fileReadInvocations}</p>
+      </div>
+    </div>
+
+    {
+      hasData && summary.dailyCounts.length > 0 && (
+        <section class="mb-12">
+          <h2 class="t-h3 mb-4">Daily invocations</h2>
+          <div class="card p-4 overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[var(--border)]">
+                  <th class="t-meta py-2 pr-4">Date</th>
+                  <th class="t-meta py-2 pr-4">Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.dailyCounts.map((day) => (
+                  <tr class="border-b border-[var(--border)]">
+                    <td class="py-2 pr-4 font-mono text-sm text-[var(--fg)]">{day.date}</td>
+                    <td class="py-2 pr-4 font-mono text-sm text-[var(--fg-muted)]">{day.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      hasData && summary.perSkillCounts.length > 0 && (
+        <section class="mb-12">
+          <h2 class="t-h3 mb-4">Most used skills</h2>
+          <div class="card p-4 overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[var(--border)]">
+                  <th class="t-meta py-2 pr-4">Skill</th>
+                  <th class="t-meta py-2 pr-4">Count</th>
+                  <th class="t-meta py-2 pr-4">Last used</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.perSkillCounts.map((sk) => (
+                  <tr class="border-b border-[var(--border)]">
+                    <td class="py-2 pr-4 font-mono text-sm text-[var(--fg)]">{sk.skillName}</td>
+                    <td class="py-2 pr-4 font-mono text-sm text-[var(--fg-muted)]">{sk.count}</td>
+                    <td class="py-2 pr-4 t-meta text-xs">{sk.lastUsedAt.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      hasData && summary.recentInvocations.length > 0 && (
+        <section class="mb-12">
+          <h2 class="t-h3 mb-4">Recent invocations</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[var(--border)]">
+                  <th class="t-meta py-3 pr-4">Skill</th>
+                  <th class="t-meta py-3 pr-4">Source</th>
+                  <th class="t-meta py-3 pr-4">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.recentInvocations.map((inv) => (
+                  <tr class="border-b border-[var(--border)] hover:bg-[var(--bg-sunk)] transition-colors">
+                    <td class="py-3 pr-4">
+                      <span class="font-mono text-sm text-[var(--fg)]">{inv.skillName}</span>
+                    </td>
+                    <td class="py-3 pr-4">
+                      <span class={`tag text-xs ${
+                        inv.source === 'native'
+                          ? 'bg-[var(--success-wash)] text-[var(--success)] border-[var(--success)]/20'
+                          : 'bg-[var(--info-wash)] text-[var(--info)] border-[var(--info)]/20'
+                      }`}>
+                        {inv.source}
+                      </span>
+                    </td>
+                    <td class="py-3 pr-4">
+                      <span class="t-meta">{inv.timestamp.toLocaleString()}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )
+    }
+
+    <TelemetrySetup endpointUrl={endpointUrl} open={!hasData} />
+  </main>
+</BaseLayout>

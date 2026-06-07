@@ -1,0 +1,47 @@
+---
+interface Props {
+  endpointUrl: string;
+  open?: boolean;
+}
+
+const { endpointUrl, open = false } = Astro.props;
+const terminalExports = `export CLAUDE_CODE_ENABLE_TELEMETRY=1
+export OTEL_LOGS_EXPORTER=otlp
+export OTEL_EXPORTER_OTLP_LOGS_PROTOCOL=http/json
+export OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=${endpointUrl}
+export OTEL_LOG_TOOL_DETAILS=1`;
+const settingsJson = JSON.stringify(
+  {
+    env: {
+      CLAUDE_CODE_ENABLE_TELEMETRY: '1',
+      OTEL_LOGS_EXPORTER: 'otlp',
+      OTEL_EXPORTER_OTLP_LOGS_PROTOCOL: 'http/json',
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: endpointUrl,
+      OTEL_LOG_TOOL_DETAILS: '1',
+    },
+  },
+  null,
+  2
+);
+---
+
+<details class="mb-12" open={open}>
+  <summary class="t-h3 mb-4 cursor-pointer list-none">Setup instructions</summary>
+  <div class="card p-6">
+    <p class="t-body mb-4">Configure Claude Code to send telemetry to this Skillbase instance.</p>
+    <p class="t-eyebrow mb-2">Terminal</p>
+    <div class="code-panel p-4 mb-4 whitespace-pre-wrap text-xs">
+      <code id="telemetry-terminal-exports">{terminalExports}</code>
+    </div>
+    <p class="t-eyebrow mb-2">~/.claude/settings.json</p>
+    <div class="code-panel p-4 whitespace-pre-wrap text-xs mb-4">
+      <code>{settingsJson}</code>
+    </div>
+    <button
+      class="btn-primary mt-2 px-4 py-2 text-sm"
+      onclick="const source = document.getElementById('telemetry-terminal-exports'); const text = source && source.textContent; if (text) { this.textContent = 'Copied'; setTimeout(() => { this.textContent = 'Copy terminal exports'; }, 5000); try { const textarea = document.createElement('textarea'); textarea.value = text; textarea.setAttribute('readonly', ''); textarea.style.position = 'fixed'; textarea.style.opacity = '0'; document.body.append(textarea); textarea.select(); document.execCommand('copy'); textarea.remove(); } catch {} }"
+    >
+      Copy terminal exports
+    </button>
+  </div>
+</details>

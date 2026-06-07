@@ -5,10 +5,12 @@ import SkillDetailHeader from '../../../components/SkillDetailHeader.astro';
 import SkillDetailOverview from '../../../components/SkillDetailOverview.astro';
 import SkillDetailTabs from '../../../components/SkillDetailTabs.astro';
 import SkillDetailSource from '../../../components/SkillDetailSource.astro';
+import SkillUsagePanel from '../../../components/SkillUsagePanel.astro';
 import SkillNotFound from '../../../components/SkillNotFound.astro';
 import RepositoryUnavailable from '../../../components/RepositoryUnavailable.astro';
 import { fromBase64Url } from '../../../lib/catalog/infrastructure/adapters/url-encoding';
 import type { IndexedRepository } from '../../../lib/catalog/domain/repository-registry/IndexedRepository';
+import type { SkillUsage } from '@lib/statistics/domain/skill-invocation/SkillInvocationRepository';
 import {
   type SkillDetailErrorState,
   resolveSkillDetailErrorState,
@@ -20,8 +22,10 @@ const { repoEncoded, skillName } = Astro.params;
 const repoPath = fromBase64Url(repoEncoded ?? '');
 
 const { createCatalogUseCases } = await import('@lib/catalog/infrastructure/di');
+const { createStatisticsUseCases } = await import('@lib/statistics/infrastructure/di');
 const { classifySkillFields } = await import('@lib/catalog/application/classifySkillFields');
 const catalog = createCatalogUseCases();
+const statistics = createStatisticsUseCases();
 
 const skill = await catalog.getSkill(repoPath, skillName ?? '');
 
@@ -29,10 +33,12 @@ let errorState: SkillDetailErrorState | null = null;
 let rawSource = '';
 let fields: ReturnType<typeof classifySkillFields> | null = null;
 let overview: ReturnType<typeof buildSkillOverview> | null = null;
+let usage: SkillUsage | null = null;
 
 if (skill) {
   fields = classifySkillFields(skill);
   overview = buildSkillOverview(skill);
+  usage = await statistics.getSkillUsage(skill.name);
   rawSource = readFileSync(skill.sourcePath, 'utf-8');
 } else {
   const repos: IndexedRepository[] = await catalog.listRepositories();
@@ -45,7 +51,7 @@ if (skill) {
 <BaseLayout>
   <main class="container-content py-16">
     {
-      skill && fields && overview ? (
+      skill && fields && overview && usage ? (
         <div>
           <SkillDetailHeader
             name={skill.name}
@@ -58,7 +64,10 @@ if (skill) {
           <div class="mt-10">
             <SkillDetailTabs>
               <div slot="overview">
-                <SkillDetailOverview overview={overview} fields={fields.sidebar} />
+                <div class="space-y-6">
+                  <SkillUsagePanel usage={usage} />
+                  <SkillDetailOverview overview={overview} fields={fields.sidebar} />
+                </div>
               </div>
               <div slot="source">
                 <SkillDetailSource rawSource={rawSource} />

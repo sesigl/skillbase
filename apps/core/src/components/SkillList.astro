@@ -1,12 +1,16 @@
 ---
 import type { Skill } from '@lib/catalog/domain/skill/Skill';
+import type { SkillUsageOverview } from '@lib/statistics/domain/skill-invocation/SkillInvocationRepository';
 import SkillCard from './SkillCard.astro';
 
-const { skills } = Astro.props;
+const { skills, usageBySkillName = {} } = Astro.props as {
+  skills: Skill[];
+  usageBySkillName?: Record<string, SkillUsageOverview>;
+};
 ---
 
 <div class="grid gap-4">
   {skills.map((skill: Skill) => (
-    <SkillCard skill={skill} />
+    <SkillCard skill={skill} usage={usageBySkillName[skill.name]} />
   ))}
 </div>

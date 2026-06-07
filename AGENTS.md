@@ -144,5 +144,5 @@ as a real implementation — don't bypass through repositories or direct DB.
 <!-- SPECKIT START -->
 ## Active Feature Plan
 
-See `specs/003-skill-detail-page/plan.md` for the current implementation plan.
+See `specs/003-skill-usage-statistics/plan.md` for the current implementation plan.
 <!-- SPECKIT END -->

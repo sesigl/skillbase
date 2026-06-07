@@ -1,12 +1,20 @@
 ---
 import { toBase64Url } from '@lib/catalog/infrastructure/adapters/url-encoding';
-const { skill } = Astro.props;
+import type { Skill } from '@lib/catalog/domain/skill/Skill';
+import type { SkillUsageOverview } from '@lib/statistics/domain/skill-invocation/SkillInvocationRepository';
+
+const { skill, usage } = Astro.props as { skill: Skill; usage?: SkillUsageOverview };
 
 const href = `/skill/${toBase64Url(skill.sourceRepository)}/${skill.name}`;
+const uniqueUsers = usage?.uniqueUsersLast30Days ?? 0;
+const invocations = usage?.invocationsLast30Days ?? 0;
+const formatNumber = new Intl.NumberFormat('en-US');
+const userLabel = uniqueUsers === 1 ? 'user' : 'users';
+const invocationLabel = invocations === 1 ? 'invocation' : 'invocations';
 ---
 
 <a href={href} class="card block p-6 hover:-translate-y-px no-underline focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]">
-  <div class="flex items-start justify-between gap-4">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
     <div class="min-w-0">
       <h3 class="font-mono text-base font-semibold">
         <span class="text-[var(--accent-text)]">{skill.name}</span>
@@ -18,9 +26,20 @@ const href = `/skill/${toBase64Url(skill.sourceRepository)}/${skill.name}`;
         {skill.description}
       </p>
     </div>
-    <span class={`tag shrink-0 ${skill.userInvocable ? 'border-[var(--green-600)] text-[var(--green-600)]' : 'border-[var(--amber-600)] text-[var(--amber-600)]'}`}>
-      {skill.userInvocable ? 'user-invocable' : 'model-invocation-disabled'}
-    </span>
+    <aside class="flex shrink-0 flex-row items-center gap-3 sm:flex-col sm:items-end">
+      <div class="text-left sm:text-right">
+        <span class="block font-mono text-xs text-[var(--fg-faint)]">
+          <span class:list={[uniqueUsers > 0 ? 'font-semibold text-[var(--accent-text)]' : 'text-[var(--fg-faint)]']}>
+            {formatNumber.format(uniqueUsers)} {userLabel}
+          </span>
+          <span class="px-1 text-[var(--fg-faint)]">·</span>
+          <span>{formatNumber.format(invocations)} {invocationLabel}</span>
+        </span>
+        <span class={`tag mt-2 shrink-0 ${skill.userInvocable ? 'border-[var(--green-600)] text-[var(--green-600)]' : 'border-[var(--amber-600)] text-[var(--amber-600)]'}`}>
+          {skill.userInvocable ? 'user-invocable' : 'model-invocation-disabled'}
+        </span>
+      </div>
+    </aside>
   </div>
 
   {skill.tags.length > 0 && (

@@ -5,8 +5,8 @@ saveExact: true
 engineStrict: true
 allowBuilds:
   '@ast-grep/cli': true
-  cpu-features: set this to true or false
+  cpu-features: false
   esbuild: true
-  protobufjs: set this to true or false
+  protobufjs: false
   sharp: true
-  ssh2: set this to true or false
+  ssh2: false

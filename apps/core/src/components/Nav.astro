@@ -1,0 +1,27 @@
+---
+const { pathname } = Astro.url;
+---
+
+<nav class="border-b border-[var(--border)] bg-[var(--surface)]">
+  <div class="max-w-[var(--maxw-wide)] mx-auto px-6 flex items-center justify-between h-14">
+    <a href="/" class="font-display text-lg font-bold text-[var(--fg)] tracking-tight no-underline">
+      skillbase
+    </a>
+    <div class="flex items-center gap-1">
+      <a
+        href="/"
+        class={`font-mono text-sm px-3 py-1.5 rounded-md transition-colors duration-[var(--dur-fast)] no-underline
+          ${pathname === '/' ? 'text-[var(--accent-text)] bg-[var(--accent-wash)]' : 'text-[var(--fg-muted)] hover:text-[var(--fg)]'}`}
+      >
+        skills
+      </a>
+      <a
+        href="/metrics"
+        class={`font-mono text-sm px-3 py-1.5 rounded-md transition-colors duration-[var(--dur-fast)] no-underline
+          ${pathname === '/metrics' ? 'text-[var(--accent-text)] bg-[var(--accent-wash)]' : 'text-[var(--fg-muted)] hover:text-[var(--fg)]'}`}
+      >
+        metrics
+      </a>
+    </div>
+  </div>
+</nav>
